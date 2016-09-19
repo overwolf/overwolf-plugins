@@ -107,20 +107,20 @@ Note: can't append to files. This function will either create a new file or over
 ```
 var filename = "/folder/file.txt";
 var content = "1234\n56768";
-plugin.writeLocalAppDataFile( filename, content, function(status, message)
+plugin.get().writeLocalAppDataFile( filename, content, function(status, message)
   {
     console.log(arguments);
   });
 ```
 
-- plugin.listenOnFile - Stream a file on the local filesystem to a javascript callback (text files only)
+- plugin.get().listenOnFile - Stream a file on the local filesystem to a javascript callback (text files only)
 NOTE: don't call other plugin APIs from callback
 
 ```
 var fileIdentifier = "my-id";
 var filename = "c:/folder/file.log";
 var skipToEndOfFile = false;
-plugin.listenOnFile(fileIdentifier, filename, skipToEndOfFile, function(fileId, status, data) {
+plugin.get().listenOnFile(fileIdentifier, filename, skipToEndOfFile, function(fileId, status, data) {
   if (fileId == fileIdentifier) {
     if (status) {
       console.log("[" + fileId + "] " + data);
@@ -131,20 +131,20 @@ plugin.listenOnFile(fileIdentifier, filename, skipToEndOfFile, function(fileId, 
 });
 ```
 
-- plugin.stopFileListen - Stop streaming a file that you previously passed when calling |listenOnFile|
+- plugin.get().stopFileListen - Stop streaming a file that you previously passed when calling |listenOnFile|
 NOTE: there are no callbacks - as this will never fail (even if the stream doesn't exist)
 NOTE: you will get a callback to |listenOnFile| with status == false when calling this function
 
 ```
 var fileIdentifier = "my-id";
-plugin.stopFileListen(fileIdentifier);
+plugin.get().stopFileListen(fileIdentifier);
 ```
 
-- plugin.getLatestFileInDirectory - Retreieve the most updated (latest accessed) file in a given folder (good for game logs)
+- plugin.get().getLatestFileInDirectory - Retreieve the most updated (latest accessed) file in a given folder (good for game logs)
 
 ```
 var folder = "c:/game/logs/*"; // no extension filtering
-plugin.getLatestFileInDirectory(folder, function(status, filename) {
+plugin.get().getLatestFileInDirectory(folder, function(status, filename) {
   if (status) {
     console.log("The most update file in this folder is: " + filename);
   } else {

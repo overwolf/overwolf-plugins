@@ -1,9 +1,13 @@
-NOTE!!! PLEASE READ THIS BEFORE YOU START:
+# NOTE!!! PLEASE READ THIS BEFORE YOU START
 When downloading this repo and specifically DLL files in this repo,
 Windows will set the DLL files as untrusted.
+
 You need to:
+
 1. Right click the DLL file 
+
 2. Select properties
+
 3. Check the Unblock checkbox on the bottom right side
 
 If you don't do this, the DLL will fail to load in Overwolf and 

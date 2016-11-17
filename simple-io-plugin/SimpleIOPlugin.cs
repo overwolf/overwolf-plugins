@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -145,10 +145,71 @@ namespace overwolf.plugins {
       }
     }
 
-    public void writeLocalAppDataFile(string path, string content, Action<object, object> callback) {
+    public void createDirectory(string path, Action<object> callback) {
+            if (callback == null)
+                return;
+
+            try {
+                string directoryPath = "";
+                Task.Run(() =>
+                {
+                    try
+                    {
+                        path = path.Replace('/', '\\');
+
+                        directoryPath = Path.Combine(LOCALAPPDATA, path);
+
+                        Directory.CreateDirectory(directoryPath);
+                        callback(true);
+                    }
+                    catch (Exception)
+                    {
+
+                        callback(false);
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                callback(string.Format("error: ", ex.ToString()));
+            }
+        }
+
+        public void listFiles(string path, Action<object> callback)
+        {
+            if (callback == null)
+                return;
+
+            try
+            {
+                string directoryPath = "";
+                Task.Run(() =>
+                {
+                    try
+                    {
+                        path = path.Replace('/', '\\');
+
+                        directoryPath = Path.Combine(LOCALAPPDATA, path);
+                   
+                        callback(Directory.EnumerateFiles(directoryPath).ToArray<string>());
+                        
+                    }
+                    catch (Exception)
+                    {
+
+                        callback(false);
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                callback(string.Format("error: ", ex.ToString()));
+            }
+        }
+        public void writeLocalAppDataFile(string path, string content, Action<object, object> callback) {
       if (callback == null)
         return;
-
+      
       try {
         Task.Run(() => {
           string filePath = "";

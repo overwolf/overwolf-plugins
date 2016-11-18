@@ -145,7 +145,7 @@ namespace overwolf.plugins {
       }
     }
 
-    public void createDirectory(string path, Action<object> callback) {
+     public void createDirectory(string path, Action<object> callback) {
             if (callback == null)
                 return;
 
@@ -155,12 +155,11 @@ namespace overwolf.plugins {
                 {
                     try
                     {
-                        path = path.Replace('/', '\\');
-
+                        path = path.Replace('/', '\\');  
                         directoryPath = Path.Combine(LOCALAPPDATA, path);
-
+                      
                         Directory.CreateDirectory(directoryPath);
-                        callback(true);
+                        callback(Directory.Exists(directoryPath));
                     }
                     catch (Exception)
                     {

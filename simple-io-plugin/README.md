@@ -67,14 +67,16 @@ plugin.get().isDirectory(
 ```
 
 - createDirectory - create a new directory in the Local App Data path, and return wether it exists
-NOTE: the function returns wether the directory *exists* or not.
-if you want to check wether the function was *created*, you should
+NOTE: this function returns whether the directory *exists* or not.
+if you want to check whether the directory was *created*, you should
 use isDirectory before the creation operation.
 
 ``` 
+var directory = "MYDOCUMENTS"
+var mydirectoryname = "myapp"
 plugin.get().createDirectory(
-  "myapp",
-  function(status) {
+  directory, mydirectoryname,
+  function(status, message) {
   
     if(status === true) {
     } else {
@@ -118,13 +120,14 @@ plugin.get().getBinaryFile(
     }
 });
 ```
-- writeLocalAppDataFile - Create a file on the local filesystem with given text content. For security reasons, we only allow to write to the local-app-data folder
+- writeLocalFile - Create a file on the local filesystem with given text content. For security reasons, we only allow to write in specific, pre-defined folders.
 Note: can't append to files. This function will either create a new file or overwrite the previous one (based on implementation).
 
 ```
+var directory = "LOCALAPPDATA";
 var filename = "/folder/file.txt";
 var content = "1234\n56768";
-plugin.get().writeLocalAppDataFile( filename, content, function(status, message)
+plugin.get().writeLocalFile(directory, filename, content, function(status, message)
   {
     console.log(arguments);
   });

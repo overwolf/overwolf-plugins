@@ -12,8 +12,8 @@ using System.Reflection;
 namespace overwolf.plugins {
   public class SimpleIOPlugin : IDisposable {
     public SimpleIOPlugin() {
-
-            fillDirectories();
+      
+      fillDirectories();
     }
     
     #region Events
@@ -27,7 +27,7 @@ namespace overwolf.plugins {
     #endregion
 
     #region Properties
-    public Dictionary<string, string> DIRECTORIES; 
+    private Dictionary<string, string> DIRECTORIES;
 
     public string PROGRAMFILES {
       get { return Constants.kProgramFiles; }
@@ -101,9 +101,9 @@ namespace overwolf.plugins {
       get { return Constants.kLocalApplicationData; }
     }
     #endregion
-
+   
     #region Utility Functions
-    public void fillDirectories()
+    private void fillDirectories()
     {//this function assumes that only file paths are of a "string" type
         DIRECTORIES = new Dictionary<string, string>();
 
@@ -118,8 +118,8 @@ namespace overwolf.plugins {
             }
         }
     }
-
-    public bool isValidPath(string pathName)
+    
+    private bool isValidPath(string pathName)
     {
         if (DIRECTORIES.Keys.Any(pathName.Contains))
         {
@@ -131,26 +131,26 @@ namespace overwolf.plugins {
         }
     }
     #endregion
-
+      
     #region Functions
     public void fileExists(string path, Action<object> callback) {
 
-    if (callback == null)
-    return;
+      if (callback == null)
+        return;
 
-    if (string.IsNullOrEmpty(path)) {
+      if (string.IsNullOrEmpty(path)) {
         callback(false);
         return;
-        }
+      }
 
-        Task.Run(() => {
+      Task.Run(() => {
         try {
-            path = path.Replace('/', '\\');
-            callback(File.Exists(path));
+          path = path.Replace('/', '\\');
+          callback(File.Exists(path));
         } catch (Exception ex) {
-            callback(string.Format("error: ", ex.ToString()));
-          }
-        });
+          callback(string.Format("error: ", ex.ToString()));
+        }
+      });
 
 
     }
@@ -179,7 +179,7 @@ namespace overwolf.plugins {
       }
     }
 
-    public void createDirectory(string pathName, string subPath, Action<object, object> callback) {
+    public void createDirectory(string pathName, string subpath, Action<object, object> callback) {
         if (callback == null)
             return;
 
@@ -189,16 +189,16 @@ namespace overwolf.plugins {
             {
                 try
                 {
-                    if (isValidPath(pathName))
+                    if (!isValidPath(pathName))
                     {
-                        directoryPath = Path.Combine(DIRECTORIES[pathName], subPath);
-
-                        Directory.CreateDirectory(directoryPath);
-                        callback(Directory.Exists(directoryPath), "");
+                        callback(false, "invalid path name!");
                     }
                     else
                     {
-                        callback(false, "invalid path name!");
+                        directoryPath = Path.Combine(DIRECTORIES[pathName], subpath);
+
+                        Directory.CreateDirectory(directoryPath);
+                        callback(Directory.Exists(directoryPath), "");
                     }
                 }
                 catch (Exception ex)
@@ -221,13 +221,17 @@ namespace overwolf.plugins {
 
         try
         {
+            string directoryPath = "";
             Task.Run(() =>
             {
                 try
                 {
-                    path = path.Replace('/', '\\');                            
-                    callback(Directory.EnumerateFiles(path).ToArray<string>());
-                        
+                    path = path.Replace('/', '\\');
+
+                    directoryPath = Path.Combine(LOCALAPPDATA, path);
+
+                    callback(Directory.EnumerateFiles(directoryPath).ToArray<string>());
+
                 }
                 catch (Exception)
                 {
@@ -241,27 +245,26 @@ namespace overwolf.plugins {
             callback(string.Format("error: ", ex.ToString()));
         }
     }
-
-    public void writeLocalFile(string pathName, string subpath, string content, Action<object, object> callback) {
-        if (callback == null)
-            return;
+    public void writeLocalFile(string path, string content, Action<object, object> callback) {
+      if (callback == null)
+        return;
       
-        try {
-            Task.Run(() => {
-                string filePath = "";
-                try {
+      try {
+        Task.Run(() => {
+          string filePath = "";
+          try {
+            path = path.Replace('/', '\\');
+            if (path.StartsWith("\\")) {
+              path = path.Remove(0, 1);
+            }
+            filePath = Path.Combine(LOCALAPPDATA, path);
 
-                    if (isValidPath(pathName)) {
-                        filePath = Path.Combine(DIRECTORIES[pathName], subpath);
-                        using (FileStream filestream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.Write)) {
-                            byte[] info = new UTF8Encoding(false).GetBytes(content);
-                            filestream.Write(info, 0, info.Length);
-                        }
-                        callback(true, "");
-                    } else {
-                    callback(false, "invalid path name!");
-                    }
-                } catch (Exception ex) {
+            using (FileStream filestream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.Write)) {
+              byte[] info = new UTF8Encoding(false).GetBytes(content);
+              filestream.Write(info, 0, info.Length);
+            }
+            callback(true, "");
+          } catch (Exception ex) {
             callback(false, string.Format("unexpected error when trying to write to '{0}' : {1}",
               filePath, ex.ToString()));
           }

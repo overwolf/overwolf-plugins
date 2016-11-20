@@ -32,7 +32,6 @@ namespace overwolf.plugins
 
         #region Properties
         private string[] BlackList = { "SYSDIR", "SYSDIRX86" };
-
         private Dictionary<string, string> DIRECTORIES;
 
         public string PROGRAMFILES
@@ -125,7 +124,7 @@ namespace overwolf.plugins
             get { return Constants.kLocalApplicationData; }
         }
         #endregion
-
+            
         #region Utility Functions
         private void fillDirectories()
         {//this function assumes that only file paths are of a "string" type
@@ -183,33 +182,6 @@ namespace overwolf.plugins
                     callback(string.Format("error: ", ex.ToString()));
                 }
             });
-
-
-        }
-        public void returnDirectories(string path, Action<object> callback)
-        {
-
-            if (callback == null)
-                return;
-
-            if (string.IsNullOrEmpty(path))
-            {
-                callback(false);
-                return;
-            }
-
-            Task.Run(() => {
-                try
-                {
-                    callback(DIRECTORIES.Keys.ToArray<string>());
-                }
-                catch (Exception ex)
-                {
-                    callback(string.Format("error: ", ex.ToString()));
-                }
-            });
-
-
         }
 
         public void isDirectory(string path, Action<object> callback)
@@ -312,7 +284,8 @@ namespace overwolf.plugins
                 callback(string.Format("error: ", ex.ToString()));
             }
         }
-        public void writeLocalFile(string path, string content, Action<object, object> callback)
+
+        public void writeLocalFile(string pathName, string fileName, string content, Action<object, object> callback)
         {
             if (callback == null)
                 return;
@@ -323,19 +296,21 @@ namespace overwolf.plugins
                     string filePath = "";
                     try
                     {
-                        path = path.Replace('/', '\\');
-                        if (path.StartsWith("\\"))
+                        if (DIRECTORIES.Keys.Contains(pathName))
                         {
-                            path = path.Remove(0, 1);
-                        }
-                        filePath = Path.Combine(LOCALAPPDATA, path);
+                            filePath = Path.Combine(DIRECTORIES[pathName], fileName);
 
-                        using (FileStream filestream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.Write))
-                        {
-                            byte[] info = new UTF8Encoding(false).GetBytes(content);
-                            filestream.Write(info, 0, info.Length);
+                            using (FileStream filestream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.Write))
+                            {
+                                byte[] info = new UTF8Encoding(false).GetBytes(content);
+                                filestream.Write(info, 0, info.Length);
+                            }
+                            callback(true, "");
                         }
-                        callback(true, "");
+                        else
+                        {
+                            callback(false, "unrecgonized path name");
+                        }
                     }
                     catch (Exception ex)
                     {

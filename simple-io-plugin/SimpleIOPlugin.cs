@@ -147,7 +147,7 @@ namespace overwolf.plugins
 
         private bool isValidPath(string pathName)
         {
-            if (DIRECTORIES.Keys.Any(pathName.Contains))
+            if (DIRECTORIES.Keys.Any(directoryName => directoryName.Equals(pathName)))
             {
                 return true;
             }

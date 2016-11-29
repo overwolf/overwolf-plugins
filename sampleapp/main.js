@@ -98,6 +98,11 @@ plugin.initialize(function(status) {
       }
   });
       
+  //plugin.get().onFileListenerChanged.addListener(function(fileId, status, data) {
+  //  if (status) {
+  //    console.log(data);
+  //  }
+  //});
   //plugin.get().listenOnFile("file-id", filename, false, function(id, status, data) { });
   //plugin.get().stopFileListen("file-id");
   //plugin.get().getLatestFileInDirectory( folder + "/*", function(status, filename ) {});

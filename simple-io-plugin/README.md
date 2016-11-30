@@ -27,15 +27,53 @@ plugin.get().LOCALAPPDATA
 
 Functions:
 ==========
-NOTE: Don't call other plugin APIs from callback functions - it will freeze the application
+NOTE: Don't call other plugin APIs from callback functions - it might freeze 
+the application (this was right for NPAPI - still, good practice with the new
+plugin system)
 
-NOTE: Because of a chromium bug - sometimes that plugin blocks on propagating events - to circumvent this use the
-following code in your app (at a global scope):
 
-setInterval(function() {
-  document.getElementById('plugin');
-}, 1000);
+- plugin.get().listenOnFile - Stream a file (text files only), line-by-line,
+from the local filesystem. 
 
+NOTE: before calling listenOnFile - you need to add an event handler to the
+|onFileListenerChanged| global event, that will receive the file stream.  See
+the following example code for the how-to:
+
+```
+var fileIdentifier = "my-id";
+plugin.get().onFileListenerChanged.addListener(function(id, status, line) {
+  if (!status) {
+    console.error("received an error on file: " + id + ": " + line);
+    return;
+  }
+  
+  if (id == fileIdentifier) {
+    console.log(line);
+  }
+});
+
+var filename = "c:/folder/file.log";
+var skipToEndOfFile = false;
+plugin.get().listenOnFile(
+  fileIdentifier, filename, skipToEndOfFile, function(fileId, status, data) {
+  if (fileId == fileIdentifier) {
+    if (status) {
+      console.log("[" + fileId + "] now streaming...");
+    } else {
+      console.log("something bad happened with: " + fileId);
+    }
+  }
+});
+```
+
+- plugin.get().stopFileListen - Stop streaming a file that you previously passed when calling |listenOnFile|
+NOTE: there are no callbacks - as this will never fail (even if the stream doesn't exist)
+NOTE: you will get a callback to |listenOnFile| with status == false when calling this function
+
+```
+var fileIdentifier = "my-id";
+plugin.get().stopFileListen(fileIdentifier);
+```
 
 - fileExists - check if a file exists locally (notice the way we use /, otherwise you need \\)
 
@@ -150,33 +188,6 @@ plugin.get().writeLocalFile(directory, filename, content, function(status, messa
   {
     console.log(arguments);
   });
-```
-
-- plugin.get().listenOnFile - Stream a file on the local filesystem to a javascript callback (text files only)
-NOTE: don't call other plugin APIs from callback
-
-```
-var fileIdentifier = "my-id";
-var filename = "c:/folder/file.log";
-var skipToEndOfFile = false;
-plugin.get().listenOnFile(fileIdentifier, filename, skipToEndOfFile, function(fileId, status, data) {
-  if (fileId == fileIdentifier) {
-    if (status) {
-      console.log("[" + fileId + "] " + data);
-    } else {
-      console.log('something bad happened: ' + data);
-    }
-  }
-});
-```
-
-- plugin.get().stopFileListen - Stop streaming a file that you previously passed when calling |listenOnFile|
-NOTE: there are no callbacks - as this will never fail (even if the stream doesn't exist)
-NOTE: you will get a callback to |listenOnFile| with status == false when calling this function
-
-```
-var fileIdentifier = "my-id";
-plugin.get().stopFileListen(fileIdentifier);
 ```
 
 - plugin.get().getLatestFileInDirectory - Retreieve the most updated (latest accessed) file in a given folder (good for game logs)

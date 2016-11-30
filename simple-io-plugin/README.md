@@ -100,7 +100,24 @@ plugin.get().isDirectory(
     }
 });
 ```
- 
+
+- createDirectory - create a new directory in the Local App Data path, and return wether it exists
+NOTE: the function returns wether the directory *exists* or not.
+if you want to check wether the function was *created*, you should
+use isDirectory before the creation operation.
+
+``` 
+plugin.get().createDirectory(
+  "myapp",
+  function(status) {
+  
+    if(status === true) {
+    } else {
+    }
+});
+  
+```
+
 - getTextFile - reads a file's contents and returns as text.
 Use the second parameter to indicate if the file is in UCS-2 (2 bytes per char) and
 it will automatically do the UTF8 conversion.  Otherwise, returns in UTF8

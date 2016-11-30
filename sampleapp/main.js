@@ -97,6 +97,19 @@ plugin.initialize(function(status) {
         addMessage(arr);
       }
   });
+
+  plugin.get().listDirectory(
+  plugin.get().PROGRAMFILES,
+  function(status, result) {
+
+    if(status === true) {
+      console.log(result);
+    }
+    else {
+      console.log(message);
+    }
+
+  } );
       
   //plugin.get().listenOnFile("file-id", filename, false, function(id, status, data) { });
   //plugin.get().stopFileListen("file-id");

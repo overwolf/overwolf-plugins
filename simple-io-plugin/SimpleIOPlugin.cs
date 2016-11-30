@@ -15,7 +15,6 @@ namespace overwolf.plugins
     {
         public SimpleIOPlugin()
         {
-
             fillDirectories();
         }
 
@@ -250,38 +249,6 @@ namespace overwolf.plugins
             catch (Exception ex)
             {
                 callback(false, string.Format("error: ", ex.ToString()));
-            }
-        }
-
-        public void listFiles(string path, Action<object> callback)
-        {
-            if (callback == null)
-                return;
-
-            try
-            {
-                string directoryPath = "";
-                Task.Run(() =>
-                {
-                    try
-                    {
-                        path = path.Replace('/', '\\');
-
-                        directoryPath = Path.Combine(LOCALAPPDATA, path);
-
-                        callback(Directory.EnumerateFiles(directoryPath).ToArray<string>());
-
-                    }
-                    catch (Exception)
-                    {
-
-                        callback(false);
-                    }
-                });
-            }
-            catch (Exception ex)
-            {
-                callback(string.Format("error: ", ex.ToString()));
             }
         }
 

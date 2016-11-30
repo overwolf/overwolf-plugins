@@ -37,9 +37,6 @@ setInterval(function() {
 }, 1000);
 
 
-
-
-
 - fileExists - check if a file exists locally (notice the way we use /, otherwise you need \\)
 
 ```
@@ -66,6 +63,26 @@ plugin.get().isDirectory(
 });
 ```
 
+- listDirectory - return a directory's content.
+NOTE: this function returns a JSON object with the content of a directory, in a descending order by the last time modified (last write time).
+if this function fails, an error message will be returned.
+
+```
+io.get().listDirectory(
+  io.get().PROGRAMFILES,
+  function(status, result) { 
+    if(status === true) {
+	  directory = JSON.parse(result);
+	  directory.map(function(content) { 
+	    if(content.type == "file") {
+	      console.log(content.name);
+		} else {
+	      console.log(result);
+		}
+	});
+  }
+```
+
 - createDirectory - create a new directory in the Local App Data path, and return wether it exists
 NOTE: this function returns whether the directory *exists* or not.
 if you want to check whether the directory was *created*, you should
@@ -74,6 +91,7 @@ use isDirectory before the creation operation.
 ``` 
 var directory = "MYDOCUMENTS"
 var mydirectoryname = "myapp"
+
 plugin.get().createDirectory(
   directory, mydirectoryname,
   function(status, message) {
@@ -120,6 +138,7 @@ plugin.get().getBinaryFile(
     }
 });
 ```
+
 - writeLocalFile - Create a file on the local filesystem with given text content. For security reasons, we only allow to write in specific, pre-defined folders.
 Note: can't append to files. This function will either create a new file or overwrite the previous one (based on implementation).
 

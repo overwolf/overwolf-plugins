@@ -3,6 +3,10 @@ simple-io-plugin
 Used to read files from local disk.
 Includes an Overwolf sample WebApp to show all features.
 
+NOTE: make sure to check out different forks of this project - as they contain
+more API implementations.  Such as this one: 
+https://github.com/Noobay/overwolf-plugins/tree/master/simple-io-plugin
+
 Constants:
 ==========
 ```

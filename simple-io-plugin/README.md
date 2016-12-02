@@ -153,6 +153,7 @@ plugin.get().writeLocalAppDataFile( filename, content, function(status, message)
 ```
 
 - listDirectory - return a directory's content (files and folders).
+
 CREDIT: this documentation was written by: Noobay (https://github.com/Noobay).
 
 NOTE: this function returns a JSON object with the contents of the directory, in 
@@ -173,13 +174,14 @@ plugin.get().listDirectory(plugin.get().PROGRAMFILES, function(status, result) {
     });
   }
 });
+```
 
-If successful, result can look like this:
+If successful, result may look like this:
 [{"name" : "desktop.ini" , 
   "type": "file" },
  { "name" : "AppInsights" , 
    "type": "dir" }]
-```
+
 
 
 - plugin.get().getLatestFileInDirectory - Retreieve the most updated (latest accessed) file in a given folder (good for game logs)

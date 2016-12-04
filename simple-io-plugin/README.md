@@ -72,7 +72,8 @@ plugin.get().listenOnFile(
 
 - plugin.get().stopFileListen - Stop streaming a file that you previously passed when calling |listenOnFile|
 NOTE: there are no callbacks - as this will never fail (even if the stream doesn't exist)
-NOTE: you will get a callback to |listenOnFile| with status == false when calling this function
+NOTE: you will get a callback to |onFileListenerChanged| with status == false && data = "Listener Terminated" when calling this function 
+NOTE: stopFileListen is not deregister the onFileListenerChanged event handler
 
 ```
 var fileIdentifier = "my-id";

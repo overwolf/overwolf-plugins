@@ -478,7 +478,7 @@ namespace overwolf.plugins {
               result = GetDpiForMonitor(new IntPtr((long)monitorHandle),
                 MONITOR_DPI_TYPE.MDT_EFFECTIVE_DPI, out dpiX, out dpiY);
 
-              callback(result == 0, dpiX);
+              callback(result == 0, (int)dpiX);
 
             } catch (Exception ex) {
               callback(false, "Unknown error: " + ex.ToString());

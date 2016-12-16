@@ -54,8 +54,9 @@ namespace overwolf.plugins
 
             if (lastMaxOffset > reader.BaseStream.Length)
             {
-              lastMaxOffset = reader.BaseStream.Position;
-              continue;
+             // lastMaxOffset = reader.BaseStream.Position;
+              notifierDelegate(id, false, "truncated");
+              return;
             }
 
             //seek to the last max offset

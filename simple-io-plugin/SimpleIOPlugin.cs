@@ -10,8 +10,13 @@ using System.Windows.Input;
 
 namespace overwolf.plugins {
   public class SimpleIOPlugin : IDisposable {
-    public SimpleIOPlugin() {
+    IntPtr _window = IntPtr.Zero;
 
+    public SimpleIOPlugin(int window) {
+      _window = new IntPtr(window); ;
+    }
+
+    public SimpleIOPlugin() {
     }
     
     #region Events
@@ -365,6 +370,29 @@ namespace overwolf.plugins {
       }
     }
 
+    public void simulateMouseClick(int x, int y, Action<object> callback) {
+      if (_window == IntPtr.Zero) {
+        if (callback != null) {
+          callback(new { status = "error", error = "window handle undefined" });
+        }
+        return;
+      }
+
+      Task.Run(() => {
+        try {
+          SendMessage(_window, WM_LBUTTONDOWN, 0, MakeLParam(x, y));
+          Thread.Sleep(100);
+          SendMessage(_window, WM_LBUTTONUP, 0, MakeLParam(x, y));
+          if (callback != null) {
+            callback(new { status = "success" });
+          }
+        } catch (Exception ex) {
+          if (callback != null) {
+            callback(new { status = "error", error = ex.ToString() });
+          }
+        }
+      });
+    }
 
     #region getCurrentCursorPosition
     [StructLayout(LayoutKind.Sequential)]
@@ -512,6 +540,16 @@ namespace overwolf.plugins {
 
       return true;
     }
+
+    [DllImport("USER32.DLL", EntryPoint = "SendMessage")]
+    private static extern IntPtr SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
+
+    private int MakeLParam(int LoWord, int HiWord) {
+      return ((HiWord << 16) | (LoWord & 0xffff));
+    }
+
+    private const int WM_LBUTTONDOWN = 0x0201;
+    private const int WM_LBUTTONUP = 0x0202;
     #endregion Private Funcs
   }
 }

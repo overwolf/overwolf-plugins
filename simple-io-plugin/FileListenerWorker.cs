@@ -31,28 +31,27 @@ namespace overwolf.plugins
           callback(id, true, "");
           callback = null;
 
-
-          if (!skipToEnd)
-          {
+          long lastFilePosition = 0;
+          if (!skipToEnd) {
             string line = "";
-            while ((line = reader.ReadLine()) != null)
-            {
+            while ((line = reader.ReadLine()) != null) {
               notifierDelegate(id, true, line);
             }
-          }
-
-          //start at the end of the file
-          long lastMaxOffset = reader.BaseStream.Length;
+            lastFilePosition = reader.BaseStream.Position;
+          } else {
+            //start at the end of the file
+            lastFilePosition = reader.BaseStream.Seek(0, SeekOrigin.End);
+          }          
 
           while (!IsCanceled)
           {
             System.Threading.Thread.Sleep(100);
 
             //if the file size has not changed, idle
-            if (reader.BaseStream.Length == lastMaxOffset)
+            if (reader.BaseStream.Length == lastFilePosition)
               continue;
 
-            if (lastMaxOffset > reader.BaseStream.Length)
+            if (lastFilePosition > reader.BaseStream.Length)
             {
              // lastMaxOffset = reader.BaseStream.Position;
               notifierDelegate(id, false, "truncated");
@@ -60,7 +59,7 @@ namespace overwolf.plugins
             }
 
             //seek to the last max offset
-            reader.BaseStream.Seek(lastMaxOffset, SeekOrigin.Begin);
+            reader.BaseStream.Seek(lastFilePosition, SeekOrigin.Begin);
 
             //read out of the file until the EOF
             string line = "";
@@ -70,7 +69,7 @@ namespace overwolf.plugins
             }
 
             //update the last max offset
-            lastMaxOffset = reader.BaseStream.Position;
+            lastFilePosition = reader.BaseStream.Position;
           }
         }
 

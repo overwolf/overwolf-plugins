@@ -101,6 +101,19 @@ namespace overwolf.plugins {
     public string LOCALAPPDATA {
       get { return Constants.kLocalApplicationData; }
     }
+
+    public bool isMouseLeftButtonPressed {
+      get {
+        return Convert.ToBoolean(GetKeyState(VK_LBUTTON) & KEY_PRESSED);
+
+      }
+    }
+    public bool isMouseRightButtonPressed {
+      get {
+        return Convert.ToBoolean(GetKeyState(VK_RBUTTON) & KEY_PRESSED);
+      }
+    }
+
     #endregion
 
     #region Functions
@@ -525,6 +538,9 @@ namespace overwolf.plugins {
     #endregion Functions
 
     #region Private Funcs
+    [DllImport("USER32.dll")]
+    private static extern short GetKeyState(int nVirtKey);
+
     private bool NormalizePathWithFilePattern(string path, out string pattern, out string folder) {
       path = path.Replace('/', '\\');
       folder = path;
@@ -550,6 +566,9 @@ namespace overwolf.plugins {
 
     private const int WM_LBUTTONDOWN = 0x0201;
     private const int WM_LBUTTONUP = 0x0202;
+    private const int VK_LBUTTON = 0x01;
+    private const int VK_RBUTTON = 0x02;
+    private const int KEY_PRESSED = 0x8000;
     #endregion Private Funcs
   }
 }

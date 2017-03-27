@@ -9,6 +9,7 @@ namespace overwolf.plugins
 {
   internal class FileListenerWorker
   {
+    string _fileName;
     public FileListenerWorker()
     {
       IsCanceled = false;
@@ -17,6 +18,7 @@ namespace overwolf.plugins
     public void ListenOnFile(string id, string filename, bool skipToEnd, Action<object, object, object> callback,
       Action<object, object, object> notifierDelegate)
     {
+      _fileName = filename;
       try
       {
         if (!CanReadFile(filename))

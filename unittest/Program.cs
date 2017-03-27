@@ -10,6 +10,7 @@ namespace overwolf.plugins.unittest
 {
   class Program
   {
+    static SimpleIOPlugin plugn = new SimpleIOPlugin();
     static void Main(string[] args)
     {
       int maxthread =0;
@@ -17,11 +18,16 @@ namespace overwolf.plugins.unittest
       ThreadPool.GetMaxThreads(out maxthread, out io);
       ThreadPool.SetMaxThreads(1, 1);
 
-      SimpleIOPlugin plugn = new SimpleIOPlugin();
+      //SimpleIOPlugin plugn = new SimpleIOPlugin();
       
       plugn.onFileListenerChanged += plugn_OnFileListenerChanged;
       plugn.getMonitorDPI(65539, new Action<object, object>((x, y) =>
       {
+
+      }));
+
+      plugn.onOutputDebugString += plugn_onOutputDebugString;
+      plugn.listenOnProcess(12964, new Action<object, object>((x, y) => {
 
       }));
 
@@ -59,16 +65,20 @@ namespace overwolf.plugins.unittest
       }));
 
 
-      plugn.listenOnFile("test", @"c:\Temp\test.txt", false, new Action<object, object, object>((id, status, line) =>
+      plugn.listenOnFile("test", @"e:\League of Legends\Logs\Game - R3d Logs\2017-01-29T13-50-43_r3dlog.txt", false, new Action<object, object, object>((id, status, line) =>
       {
-        Trace.WriteLine(line);
+       // Trace.WriteLine(line);
       }));
-
       Task.Run(() =>
       {
         try
         {
-          Thread.Sleep(1000);
+          Trace.WriteLine("left button pressed:" + plugn.isMouseLeftButtonPressed);
+          plugn.stopProcesseListen(12964, new Action<object, object>((x, y) => {
+
+          }));
+          Thread.Sleep(5000);
+          Trace.WriteLine("left button pressed:" + plugn.isMouseLeftButtonPressed);
           plugn.stopFileListen("test");
           //plugn.listenOnFile("test", @"c:\Temp\test.txt", true, new Action<object, object, object>((id, status, line) =>
           //{
@@ -83,9 +93,13 @@ namespace overwolf.plugins.unittest
 
       Console.ReadLine();
     }
+
+    static void plugn_onOutputDebugString(object arg1, object arg2) {
+      Console.WriteLine(string.Format("onOutputDebugString pid:{0} text:{1}", arg1, arg2));
+    }
     static void plugn_OnFileListenerChanged(object id, object status, object data)
     {
-      Console.WriteLine(string.Format("file updated: id:{0} status:{1} data:{2}", id, status, data));
+      //Console.WriteLine(string.Format("file updated: id:{0} status:{1} data:{2}", id, status, data));
     }
   }
 }

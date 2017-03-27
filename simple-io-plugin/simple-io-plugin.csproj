@@ -42,8 +42,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
+    <Compile Include="DebugMonitor.cs" />
     <Compile Include="FileListenerWorker.cs" />
     <Compile Include="FileListenerManager.cs" />
+    <Compile Include="OutputDebugStringManager.cs" />
     <Compile Include="SimpleIOPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils.cs" />

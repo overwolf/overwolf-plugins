@@ -27,7 +27,7 @@ namespace overwolf.plugins.unittest
       }));
 
       plugn.onOutputDebugString += plugn_onOutputDebugString;
-      plugn.listenOnProcess(12964, new Action<object, object>((x, y) => {
+      plugn.listenOnProcess("LeagueClientUx", new Action<object, object>((x, y) => {
 
       }));
 
@@ -74,7 +74,7 @@ namespace overwolf.plugins.unittest
         try
         {
           Trace.WriteLine("left button pressed:" + plugn.isMouseLeftButtonPressed);
-          plugn.stopProcesseListen(12964, new Action<object, object>((x, y) => {
+          plugn.stopProcesseListen("LeagueClientUx", new Action<object, object>((x, y) => {
 
           }));
           Thread.Sleep(5000);
@@ -94,7 +94,7 @@ namespace overwolf.plugins.unittest
       Console.ReadLine();
     }
 
-    static void plugn_onOutputDebugString(object arg1, object arg2) {
+    static void plugn_onOutputDebugString(object arg1,object name, object arg2) {
       Console.WriteLine(string.Format("onOutputDebugString pid:{0} text:{1}", arg1, arg2));
     }
     static void plugn_OnFileListenerChanged(object id, object status, object data)

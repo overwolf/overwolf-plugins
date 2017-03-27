@@ -21,7 +21,7 @@ namespace overwolf.plugins {
     
     #region Events
     public event Action<object, object, object> onFileListenerChanged;
-    public event Action<object, object> onOutputDebugString;
+    public event Action<object, object, object> onOutputDebugString;
     #endregion Events
 
     #region IDisposable
@@ -378,16 +378,16 @@ namespace overwolf.plugins {
       FileListenerManager.stopFileListen(id);
     }
 
-    public void listenOnProcess(int processId, Action<object, object> callback) {
+    public void listenOnProcess(string processname, Action<object, object> callback) {
       OutputDebugStringManager.Callback = OnOutputDebugString;
       Task.Run(() => {
-        OutputDebugStringManager.ListenOnProcess(processId, callback);
+        OutputDebugStringManager.ListenOnProcess(processname, callback);
       });
     }
 
-    public void stopProcesseListen(int processId, Action<object, object> callback) {
+    public void stopProcesseListen(string processname, Action<object, object> callback) {
       Task.Run(() => {
-        OutputDebugStringManager.StopListenOnProcess(processId, callback);
+        OutputDebugStringManager.StopListenOnProcess(processname, callback);
       });
     }
 
@@ -397,10 +397,9 @@ namespace overwolf.plugins {
       }
     }
 
-    private void OnOutputDebugString(int processId, string text) {
+    private void OnOutputDebugString(int processId,string processName, string text) {
       if (onOutputDebugString != null) {
-        //onOutputDebugString.BeginInvoke(processId, text, null, null);
-        onOutputDebugString(processId, text);
+        onOutputDebugString(processId, processName,  text);
       }
     }
 

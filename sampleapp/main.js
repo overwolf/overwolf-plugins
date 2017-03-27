@@ -140,16 +140,16 @@ plugin.initialize(function(status) {
 
   });
   
-  var processId = 12964;
-  plugin.get().listenOnProcess(processId,  function(status, error) {
-			console.log("listen process: ", processId, status, error);
+  var processName = "LeagueClientUx";
+  plugin.get().listenOnProcess(processName,function(status, data) {
+			console.log("listen process: ", processName, status, data);
   })
-  // plugin.get().stopListenProcess(processId,  function(status, data) {
+  // plugin.get().stopProcesseListen(processId,  function(status, data) {
 			// console.log("stop listen process: ", processId, status, data);
   // })		 
     
     
-   plugin.get().onOutputDebugString.addListener(function(processId, line) {
+   plugin.get().onOutputDebugString.addListener(function(processId, processName, line) {
     console.log("onOutputDebugString" + processId + ": " + line);
    });
 });

@@ -178,6 +178,12 @@ namespace overwolf.plugins {
             }
             filePath = Path.Combine(LOCALAPPDATA, path);
 
+            // make sure the folder exists, prior to writing the file
+            FileInfo fileInfo = new FileInfo(filePath);
+            if (!fileInfo.Directory.Exists) {
+              fileInfo.Directory.Create();
+            }
+
             using (FileStream filestream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.Write)) {
               byte[] info = new UTF8Encoding(false).GetBytes(content);
               filestream.Write(info, 0, info.Length);

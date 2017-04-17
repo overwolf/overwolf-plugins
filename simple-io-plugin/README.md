@@ -35,6 +35,28 @@ NOTE: Don't call other plugin APIs from callback functions - it might freeze
 the application (this was right for NPAPI - still, good practice with the new
 plugin system)
 
+- plugin.get().listenOnProcess - Stream a process' "debug-outs" 
+(OutputDebugStream), line-by-line, to the |onOutputDebugString| event.  
+Some games use this debug outs for logging interseting information.
+
+NOTE: before calling listenOnProcess - you need to add an event handler to the
+|onOutputDebugString| global event, that will receive the stream.  See
+the following example code for the how-to:
+
+```
+plugin.get().onOutputDebugString.addListener(function(processId, line) {
+  console.log("onOutputDebugString" + processId + ": " + line);
+});
+
+var processId = 12964;
+plugin.get().listenOnProcess(processId,  function(status, error) {
+  console.log("listen process: ", processId, status, error);
+})
+
+// plugin.get().stopListenProcess(processId,  function(status, data) {
+//   console.log("stop listen process: ", processId, status, data);
+// })		 
+```
 
 - plugin.get().listenOnFile - Stream a file (text files only), line-by-line,
 from the local filesystem. 

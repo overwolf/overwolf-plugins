@@ -44,18 +44,19 @@ NOTE: before calling listenOnProcess - you need to add an event handler to the
 the following example code for the how-to:
 
 ```
-plugin.get().onOutputDebugString.addListener(function(processId, line) {
+var processName = "LeagueClientUx";
+plugin.get().onOutputDebugString.addListener(function(processId, processName, line) {
   console.log("onOutputDebugString" + processId + ": " + line);
 });
 
-var processId = 12964;
-plugin.get().listenOnProcess(processId,  function(status, error) {
-  console.log("listen process: ", processId, status, error);
+plugin.get().listenOnProcess(processName,function(status, data) {
+  console.log("listen process: ", processName, status, data);
 })
 
-// plugin.get().stopListenProcess(processId,  function(status, data) {
-//   console.log("stop listen process: ", processId, status, data);
-// })		 
+// plugin.get().stopProcesseListen(processName,  function(status, data) {
+// console.log("stop listen process: ", processName, status, data);
+// })
+
 ```
 
 - plugin.get().listenOnFile - Stream a file (text files only), line-by-line,

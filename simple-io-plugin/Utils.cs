@@ -7,45 +7,34 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace overwolf.plugins
-{
-  internal class Utils
-  {
-    public static void AddWriteAccessToFile(string serverLogPath)
-    {
-      try
-      {
+namespace overwolf.plugins {
+  internal class Utils {
+    public static void AddWriteAccessToFile(string serverLogPath) {
+      try {
         var fileSecurity = File.GetAccessControl(serverLogPath);
-
-        var fileAccessRule = new FileSystemAccessRule(WindowsIdentity.GetCurrent().Name, FileSystemRights.FullControl,
-            AccessControlType.Allow);
+        var fileAccessRule = new FileSystemAccessRule(
+          WindowsIdentity.GetCurrent().Name, FileSystemRights.FullControl,
+          AccessControlType.Allow);
 
         fileSecurity.AddAccessRule(fileAccessRule);
 
         File.SetAccessControl(serverLogPath, fileSecurity);
-      }
-      catch
-      {
+      } catch {
       }
     }
 
-    public static void MakeFileReadWrite(string serverLogPath)
-    {
-      try
-      {
+    public static void MakeFileReadWrite(string serverLogPath) {
+      try {
         var attributes = File.GetAttributes(serverLogPath);
-
-        if ((attributes & FileAttributes.ReadOnly) != FileAttributes.ReadOnly)
-        {
+        if ((attributes & FileAttributes.ReadOnly) != FileAttributes.ReadOnly) {
           return;
         }
 
         attributes = attributes & ~FileAttributes.ReadOnly;
         File.SetAttributes(serverLogPath, attributes);
-      }
-      catch
-      {
+      } catch {
       }
     }
+
   }
 }

@@ -45,6 +45,7 @@
     <Compile Include="DebugMonitor.cs" />
     <Compile Include="FileListenerWorker.cs" />
     <Compile Include="FileListenerManager.cs" />
+    <Compile Include="IniFile.cs" />
     <Compile Include="OutputDebugStringManager.cs" />
     <Compile Include="SimpleIOPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

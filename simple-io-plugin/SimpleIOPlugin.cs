@@ -384,6 +384,17 @@ namespace overwolf.plugins {
       FileListenerManager.stopFileListen(id);
     }
 
+    public void iniReadValue(string section, string key, string filePath, Action<object, object> callback) {
+      Task.Run(() => {
+        IniFile.IniReadValue(section, key, filePath, callback);
+      });
+    }
+    public void iniWriterValue(string section, string key, string value, string filePath, Action<object, object> callback ) {
+      Task.Run(() => {
+        IniFile.IniWriteValue(section, key, value, filePath, callback);
+      });
+    }
+
     public void listenOnProcess(string processname, Action<object, object> callback) {
       OutputDebugStringManager.Callback = OnOutputDebugString;
       Task.Run(() => {

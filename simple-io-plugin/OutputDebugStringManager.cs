@@ -62,7 +62,7 @@ namespace overwolf.plugins {
 
 
         using (var process = Process.GetProcessesByName(processName).FirstOrDefault()) {
-          if (Process.GetProcessesByName(processName) == null) {
+          if (process == null) {
             callback(false, new { error = "process not found", name = processName });
             return;
           }

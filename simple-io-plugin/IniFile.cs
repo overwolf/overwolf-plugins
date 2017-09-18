@@ -26,8 +26,16 @@ namespace overwolf.plugins {
        string value, string filePath, Action<object, object> callback) {
       try {
         lock (_sync) {
-          WritePrivateProfileString(section, key, value, filePath);
-          callback(true, "");
+          long result = WritePrivateProfileString(section, 
+                                                  key, 
+                                                  value, 
+                                                  filePath);
+
+          if (result == 0) {
+            callback(false, "");
+          } else {
+            callback(true, "");
+          }
         }
       } catch (Exception ex) {
         callback(false, ex.ToString());
@@ -38,11 +46,20 @@ namespace overwolf.plugins {
       try {
         lock (_sync) {
           StringBuilder temp = new StringBuilder(255);
-          int i = GetPrivateProfileString(section, key, "", temp,
-              255, filePath);
+          int dataLength = GetPrivateProfileString(section, 
+                                                   key, 
+                                                   "", 
+                                                   temp,
+                                                   255, 
+                                                   filePath);
 
-          var error = GetLastError();
-          callback(i != 0, i != 0 ? temp.ToString() : "invalid key");
+          if (dataLength == 0) {
+            callback(false, "invalid key");
+            return;
+          }
+
+          string ret = temp.ToString(0, dataLength);
+          callback(true, ret);
         }
       } catch (Exception ex) {
         callback(false, ex.ToString());

@@ -389,7 +389,7 @@ namespace overwolf.plugins {
         IniFile.IniReadValue(section, key, filePath, callback);
       });
     }
-    public void iniWriterValue(string section, string key, string value, string filePath, Action<object, object> callback ) {
+    public void iniWriteValue(string section, string key, string value, string filePath, Action<object, object> callback ) {
       Task.Run(() => {
         IniFile.IniWriteValue(section, key, value, filePath, callback);
       });

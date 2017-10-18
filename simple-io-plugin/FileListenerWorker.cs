@@ -16,7 +16,7 @@ namespace overwolf.plugins
     }
     public bool IsCanceled { get; set; }
     public void ListenOnFile(string id, string filename, bool skipToEnd, Action<object, object, object> callback,
-      Action<object, object, object> notifierDelegate)
+      Action<object, object, object, bool> notifierDelegate)
     {
       _fileName = filename;
       try
@@ -26,7 +26,7 @@ namespace overwolf.plugins
           callback(id, false, "Can't access file");
           return;
         }
-
+       
         using (StreamReader reader = new StreamReader(new FileStream(filename,
           FileMode.Open, FileAccess.Read, FileShare.ReadWrite)))
         {
@@ -34,10 +34,13 @@ namespace overwolf.plugins
           callback = null;
 
           long lastFilePosition = 0;
+          // 
           if (!skipToEnd) {
+            int lineCount = GetLineCount(filename);
             string line = "";
+            int lineIndex = 0;
             while ((line = reader.ReadLine()) != null) {
-              notifierDelegate(id, true, line);
+              notifierDelegate(id, true, line, (lineIndex++) >= lineCount);
             }
             lastFilePosition = reader.BaseStream.Position;
           } else {
@@ -56,7 +59,7 @@ namespace overwolf.plugins
             if (lastFilePosition > reader.BaseStream.Length)
             {
              // lastMaxOffset = reader.BaseStream.Position;
-              notifierDelegate(id, false, "truncated");
+              notifierDelegate(id, false, "truncated", false);
               return;
             }
 
@@ -67,7 +70,7 @@ namespace overwolf.plugins
             string line = "";
             while (!IsCanceled && (line = reader.ReadLine()) != null)
             {
-              notifierDelegate(id, true, line);
+              notifierDelegate(id, true, line, true);
             }
 
             //update the last max offset
@@ -76,7 +79,7 @@ namespace overwolf.plugins
         }
 
         if (notifierDelegate != null)
-          notifierDelegate(id, false, "Listener Terminated");
+          notifierDelegate(id, false, "Listener Terminated", false);
       }
       catch (Exception ex)
       {
@@ -84,9 +87,17 @@ namespace overwolf.plugins
           callback(id, false, "Terminated with Unknown error " + ex.ToString());
 
         if (notifierDelegate != null)
-          notifierDelegate(id, false, "Terminated with Unknown error " + ex.ToString());
+          notifierDelegate(id, false, "Terminated with Unknown error " + ex.ToString(), false);
       }
      
+    }
+
+    private int GetLineCount(string filename) {
+      try {
+        return File.ReadLines(filename).Count();
+      } catch {
+        return int.MaxValue;
+      }
     }
 
     private bool CanReadFile(string filename)

@@ -21,6 +21,7 @@ namespace overwolf.plugins {
     
     #region Events
     public event Action<object, object, object> onFileListenerChanged;
+    public event Action<object, object, object, object> onFileListenerChanged2;
     public event Action<object, object, object> onOutputDebugString;
     #endregion Events
 
@@ -408,9 +409,14 @@ namespace overwolf.plugins {
       });
     }
 
-    private void OnFileChanged(object id, object status, object data) {
+    private void OnFileChanged(object id, object status, object data, bool isNew) {
       if (onFileListenerChanged != null) {
         onFileListenerChanged(id, status, data);
+      }
+
+      // new event: |isNew| the line was written after start listen on file
+      if (onFileListenerChanged2 != null) {
+         onFileListenerChanged2(id, status, data, isNew);
       }
     }
 

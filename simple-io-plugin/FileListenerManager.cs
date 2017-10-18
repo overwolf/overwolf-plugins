@@ -18,7 +18,7 @@ namespace overwolf.plugins {
       new Dictionary<string, FileListenTaskObject>();
 
     public static void ListenOnFile(string id, string filename, bool skipToEnd,
-      Action<object, object, object> callback, Action<object, object, object> notifierDelegate) {
+      Action<object, object, object> callback, Action<object, object, object, bool> notifierDelegate) {
       if (callback == null)
         return;
 

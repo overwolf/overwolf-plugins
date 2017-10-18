@@ -21,6 +21,7 @@ namespace overwolf.plugins.unittest
       //SimpleIOPlugin plugn = new SimpleIOPlugin();
       
       plugn.onFileListenerChanged += plugn_OnFileListenerChanged;
+      plugn.onFileListenerChanged2 += plugn_onFileListenerChanged2;
       plugn.getMonitorDPI(65539, new Action<object, object>((x, y) =>
       {
 
@@ -64,8 +65,24 @@ namespace overwolf.plugins.unittest
         Trace.WriteLine(reason);
       }));
 
+      plugn.iniReadValue("Power", "ConsolePrinting", @"C:\Users\elad.bahar\AppData\Local\Blizzard\Hearthstone\log.config", 
+        new Action<object, object>((status, result) => {
+        Trace.WriteLine("iniReadValue: " + status + ", : " + result);
+      }));
 
-      plugn.listenOnFile("test", @"e:\League of Legends\Logs\Game - R3d Logs\2017-01-29T13-50-43_r3dlog.txt", false, new Action<object, object, object>((id, status, line) =>
+
+   //   plugn.iniWriterValue("Power", "LogLevel","2", @"C:\Users\elad.bahar\AppData\Local\Blizzard\Hearthstone\log.config",
+   //     new Action<object, object>((status, result) => {
+   //       Trace.WriteLine("iniReadValue: " + status + ", : " + result);
+   //     }));
+
+   //   plugn.iniWriterValue("Power", "LogLevel", "1", @"C:\Users\elad.bahar\AppData\Local\Blizzard\Hearthstone\log.config",
+   //       new Action<object, object>((status, result) => {
+   //  Trace.WriteLine("iniReadValue: " + status + ", : " + result);
+   //}));
+
+
+      plugn.listenOnFile("test", @"e:\temp\python.log", false, new Action<object, object, object>((id, status, line) =>
       {
        // Trace.WriteLine(line);
       }));
@@ -92,6 +109,10 @@ namespace overwolf.plugins.unittest
       });
 
       Console.ReadLine();
+    }
+
+    static void plugn_onFileListenerChanged2(object arg1, object arg2, object arg3, object arg4) {
+      
     }
 
     static void plugn_onOutputDebugString(object arg1,object name, object arg2) {

@@ -19,9 +19,10 @@ plugin.initialize(function(status) {
     
   }
 
-
   document.querySelector('#title').innerText =
     "Plugin " + plugin.get()._PluginName_ + " was loaded!";
+
+    
 
 
   //    for (i = 0; i < 500000; i++) {

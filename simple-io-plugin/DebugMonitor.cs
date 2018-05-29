@@ -236,7 +236,12 @@ namespace overwolf.plugins {
 			try {
 				// Everything after the first DWORD is our debugging text
 				IntPtr pString = new IntPtr(
-					m_SharedMem.ToInt32() + Marshal.SizeOf(typeof(int))
+#if WIN64
+        m_SharedMem.ToInt64() + Marshal.SizeOf(typeof(int))
+#else
+        m_SharedMem.ToInt32() + Marshal.SizeOf(typeof(int))
+#endif
+					
 				);
 
 				while (true) {		
@@ -259,8 +264,9 @@ namespace overwolf.plugins {
 					}
 				}	
 
-			} catch {
-				throw;
+			} catch (Exception ex){
+        FireOnOutputDebugString(0, "error ListenOnProcess: " + ex.ToString());
+				//throw;
 
 			// Cleanup
 			} finally {		

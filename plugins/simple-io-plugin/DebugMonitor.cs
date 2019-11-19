@@ -1,4 +1,4 @@
-namespace overwolf.plugins {
+namespace overwolf.plugins.simpleio {
 
 	using System;
 	using System.Threading;

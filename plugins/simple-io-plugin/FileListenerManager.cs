@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
-namespace overwolf.plugins {
+namespace overwolf.plugins.simpleio {
   static class FileListenerManager {
     private struct FileListenTaskObject {
       public Task task;

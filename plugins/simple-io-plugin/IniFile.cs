@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
-using System.IO;
 
-namespace overwolf.plugins {
+namespace overwolf.plugins.simpleio {
   /// <summary>
   /// Create a New INI file to store or load data
   /// </summary>

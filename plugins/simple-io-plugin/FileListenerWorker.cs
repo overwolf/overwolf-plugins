@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace overwolf.plugins
-{
+namespace overwolf.plugins.simpleio {
   internal class FileListenerWorker
   {
     string _fileName;

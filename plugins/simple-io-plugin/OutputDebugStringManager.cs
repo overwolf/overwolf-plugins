@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace overwolf.plugins {
+namespace overwolf.plugins.simpleio {
   static internal class OutputDebugStringManager {
 
     private class ProcessData {

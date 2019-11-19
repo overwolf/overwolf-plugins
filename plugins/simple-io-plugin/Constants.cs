@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace overwolf.plugins {
+namespace overwolf.plugins.simpleio {
   static class Constants {
     public static string kProgramFiles =
       GetFolderPathSafe(Environment.SpecialFolder.ProgramFiles);

@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Input;
 
-namespace overwolf.plugins {
+namespace overwolf.plugins.simpleio {
   public class SimpleIOPlugin : IDisposable {
     IntPtr _window = IntPtr.Zero;
 

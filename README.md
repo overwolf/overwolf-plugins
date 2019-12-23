@@ -24,6 +24,12 @@ Includes an Overwolf sample WebApp to show all features.
 
 simple-io-plugin
 ================
-Used to read files from local disk.
+Used to stream files from local disk.
 
-Current version: 1.0.0.0
+process-manager
+================
+Allows launching external processes.
+
+downloader
+================
+Allows downloading a remote files.

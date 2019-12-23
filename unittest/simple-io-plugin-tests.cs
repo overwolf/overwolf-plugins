@@ -91,8 +91,6 @@ namespace overwolf.plugins.unittest {
           //callback(string.Format("error: ", ex.ToString()));
         }
       });
-
-      Console.ReadLine();
     }
 
     void plugn_onFileListenerChanged2(object arg1, object arg2, object arg3, object arg4) {

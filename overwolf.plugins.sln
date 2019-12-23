@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "process_manager", "plugins\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3rdparty", "3rdparty", "{DE79F5F8-769B-4C1D-955E-5B199EA702C0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "downloader", "plugins\downloader\downloader.csproj", "{BF0383B5-2899-4945-ACFD-450682B06A55}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,6 +33,10 @@ Global
 		{FB2F1840-CC90-488A-8085-A825A4C432F1}.Debug|x64.Build.0 = Debug|x64
 		{FB2F1840-CC90-488A-8085-A825A4C432F1}.Release|x64.ActiveCfg = Release|x64
 		{FB2F1840-CC90-488A-8085-A825A4C432F1}.Release|x64.Build.0 = Release|x64
+		{BF0383B5-2899-4945-ACFD-450682B06A55}.Debug|x64.ActiveCfg = Debug|x64
+		{BF0383B5-2899-4945-ACFD-450682B06A55}.Debug|x64.Build.0 = Debug|x64
+		{BF0383B5-2899-4945-ACFD-450682B06A55}.Release|x64.ActiveCfg = Release|x64
+		{BF0383B5-2899-4945-ACFD-450682B06A55}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -38,6 +44,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{6F678D1A-2549-470A-8E52-644A826A5E38} = {1FD0EAB8-F292-4F13-987F-03A4A6E9BB2F}
 		{FB2F1840-CC90-488A-8085-A825A4C432F1} = {1FD0EAB8-F292-4F13-987F-03A4A6E9BB2F}
+		{BF0383B5-2899-4945-ACFD-450682B06A55} = {1FD0EAB8-F292-4F13-987F-03A4A6E9BB2F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7F2D4975-862C-48BA-BD27-E7AF3857794F}

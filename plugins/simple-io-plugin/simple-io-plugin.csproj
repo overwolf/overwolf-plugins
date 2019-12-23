@@ -32,7 +32,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\..\output\simple-io-plugin\debug\x64\</OutputPath>
+    <OutputPath>..\..\output\debug\x64\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
@@ -40,7 +40,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>..\..\output\simple-io-plugin\release\x64\</OutputPath>
+    <OutputPath>..\..\output\release\x64\</OutputPath>
     <DefineConstants>TRACE;WIN64</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>

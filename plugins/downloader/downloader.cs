@@ -40,7 +40,8 @@ namespace com.overwolf.dwnldr {
         return;
       }
 
-      PrepareLocalFileForDownload(localFile);      
+      PrepareLocalFileForDownload(localFile);
+      SetServicePointManagerGlobalParams();
 
       try {
         _url = url;
@@ -171,6 +172,25 @@ namespace com.overwolf.dwnldr {
         }
       } catch(Exception) {
         return String.Empty;
+      }
+    }
+
+    /// <summary>
+    /// Sets the global |ServicePointManager| to support new TLS protocols
+    /// </summary>
+    private static void SetServicePointManagerGlobalParams() {
+      // Wrapping this with a try...catch... since we've seen that
+      // |ServicePointManager| might not always exist in memory
+      try {
+        ServicePointManager.Expect100Continue = true;
+        ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls |
+                                               SecurityProtocolType.Tls11 |
+                                               SecurityProtocolType.Tls12 |
+                                               SecurityProtocolType.Ssl3;
+      } catch (Exception) {
+        // NOTE(twolf): Suppressing errors - because if we really need to
+        // support these protocols for the file being downloaded, the error
+        // will return to the caller of |download|
       }
     }
 

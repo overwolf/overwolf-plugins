@@ -2,10 +2,14 @@
 using com.overwolf.com.overwolf.procmgr;
 
 namespace overwolf.plugins.unittest {
-  class ProcessManagerTest {
+  class ProcessManagerTests {
     public void Run() {
       Console.WriteLine("Starting");
       var ProcessManager = new ProcessManager();
+
+      bool obsRunning = ProcessManager.isProcessRunning("obs64");
+      bool streamLabsRunning = 
+        ProcessManager.isProcessRunning("Streamlabs OBS");
 
       string path = @"notepad.exe";
       string arguments = "";

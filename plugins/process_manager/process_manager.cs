@@ -42,6 +42,16 @@ namespace com.overwolf.com.overwolf.procmgr {
     }
 
     //--------------------------------------------------------------------------
+    public bool isProcessRunning(string processName) {
+      var processes = Process.GetProcessesByName(processName);
+      if (processes.Length > 0) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    //--------------------------------------------------------------------------
     // path can be relative to the dll location or absolute
     public void launchProcess(string executableFilename, 
                               string arguments, 

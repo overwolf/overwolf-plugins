@@ -30,6 +30,15 @@ process-manager
 ================
 Allows launching external processes.
 
+Question: How to detect if OBS is running, from within your app?
+Answer: Use the process_manager.dll plugin in your app and call plugin().isProcessRunning("obs64")
+1. Get it from: https://github.com/overwolf/overwolf-plugins/tree/master/dist
+2. Download process_manager.dll
+3. Right click the dll file > properties > check the Unlock checkbox on the bottom
+4. Add the plugin to your manifest (see https://github.com/overwolf/overwolf-plugins/tree/master/sample_apps/process_manager) for reference
+5. For any process you want to check, pass the process name (without the exe extension) to the isProcessRunning function
+
+
 downloader
 ================
 Allows downloading a remote files.

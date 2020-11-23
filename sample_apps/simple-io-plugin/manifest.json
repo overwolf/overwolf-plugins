@@ -32,7 +32,7 @@
 	"extra-objects": {
       "simple-io-plugin": {
         "file": "simple-io-plugin.dll",
-        "class": "overwolf.plugins.SimpleIOPlugin"
+        "class": "overwolf.plugins.simpleio.SimpleIOPlugin"
       }
     }
   }

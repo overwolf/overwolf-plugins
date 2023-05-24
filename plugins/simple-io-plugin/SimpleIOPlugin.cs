@@ -384,8 +384,9 @@ namespace overwolf.plugins.simpleio {
       FileListenerManager.stopFileListen(id);
     }
 
-    public void listenOnDirectory(string id, string path, string filter, Action<object, object, object> callback) {
-      FileListenerManager.ListenOnDirectory(id, path, filter, callback, OnDirectoryChanged);
+      
+    public void listenOnDirectory(string id, string path, string filter, FolderListenerTypes[] notifyFilters, Action<object, object, object> callback) {
+      FileListenerManager.ListenOnDirectory(id, path, filter, notifyFilters, callback, OnDirectoryChanged);
     }
 
     public void stopFolderListen(string id) {

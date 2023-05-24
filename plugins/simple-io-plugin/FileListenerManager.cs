@@ -60,11 +60,13 @@ namespace overwolf.plugins.simpleio {
       StopExistWorker(id);
     }
 
-    public static void ListenOnDirectory(string id,
-                                         string path,
-                                         string filter,
-                                         Action<object, object, object> callback,
-                                         Action<object, object, object> notifierDelegate
+    public static void ListenOnDirectory(
+      string id,
+      string path,
+      string filter,
+      FolderListenerTypes[] notifyFilters,
+      Action<object, object, object> callback,
+      Action<object, object, object> notifierDelegate
     ) {
       if (callback == null) {
         return;
@@ -76,7 +78,12 @@ namespace overwolf.plugins.simpleio {
         warpper.worker = new FileListenerWorker();
         warpper.task = Task.Run(() => {
           try {
-            warpper.worker.ListenOnDirectory(id, path, filter, callback, notifierDelegate);
+            warpper.worker.ListenOnDirectory(id,
+                                             path,
+                                             filter,
+                                             notifyFilters,
+                                             callback,
+                                             notifierDelegate);
 
             lock (_listenTaskes) {
               if (_listenTaskes.ContainsKey(id))

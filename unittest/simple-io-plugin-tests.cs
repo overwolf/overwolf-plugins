@@ -62,6 +62,7 @@ namespace overwolf.plugins.unittest {
 
       _plugn.listenOnDirectory("FolderTest",
          @"C:\Riot Games\League of Legends (PBE)\Logs\GameCrashes\reports", 
+         [FolderListenerTypes.Created],
          "*.dmp",
           new Action<object, object, object>((id, status, line) => {
          Trace.WriteLine(id + status.ToString() + line);

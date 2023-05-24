@@ -8,7 +8,6 @@ namespace overwolf.plugins.simpleio {
     string _fileName;
     string _dirPath;
     FileSystemWatcher _folderWatcher;
-
     public FileListenerWorker()
     {
       IsCanceled = false;
@@ -94,6 +93,7 @@ namespace overwolf.plugins.simpleio {
     public void ListenOnDirectory(string id,
                                   string path,
                                   string filter,
+                                  FolderListenerTypes[] notifyFilters,
                                   Action<object, object, object> callback,
                                   Action<object, object, object> notifierDelegate
     ) {
@@ -116,9 +116,23 @@ namespace overwolf.plugins.simpleio {
         }
         
         _folderWatcher.EnableRaisingEvents = true;
-        _folderWatcher.Created += (object sender, FileSystemEventArgs e) => {
-          notifierDelegate(id, true, e.Name);
-        };
+        if (notifyFilters.Contains(FolderListenerTypes.Created)) {
+          _folderWatcher.Created += (object sender, FileSystemEventArgs e) => {
+            notifierDelegate(id, true, e.Name);
+          };
+        }
+
+        if (notifyFilters.Contains(FolderListenerTypes.Changed)) {
+          _folderWatcher.Changed += (object sender, FileSystemEventArgs e) => {
+            notifierDelegate(id, true, e.Name);
+          };
+        }
+
+        if (notifyFilters.Contains(FolderListenerTypes.Deleted)) {
+          _folderWatcher.Deleted += (object sender, FileSystemEventArgs e) => {
+            notifierDelegate(id, true, e.Name);
+          };
+        }
 
       } catch (Exception ex) {
         callback(id, false, $"Exception: {ex}");

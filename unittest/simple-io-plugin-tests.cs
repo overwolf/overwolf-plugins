@@ -19,6 +19,7 @@ namespace overwolf.plugins.unittest {
       _plugn.onFileListenerChanged += plugn_OnFileListenerChanged;
       _plugn.onFileListenerChanged2 += plugn_onFileListenerChanged2;
       _plugn.getMonitorDPI(65539, new Action<object, object>((x, y) => {
+      _plugn.onFolderListenerChanged += plugn_onFolderListenerChanged;
 
       }));
 
@@ -58,6 +59,13 @@ namespace overwolf.plugins.unittest {
         new Action<object, object>((status, result) => {
           Trace.WriteLine("iniReadValue: " + status + ", : " + result);
         }));
+
+      _plugn.listenOnDirectory("FolderTest",
+         @"C:\Riot Games\League of Legends (PBE)\Logs\GameCrashes\reports", 
+         "*.dmp",
+          new Action<object, object, object>((id, status, line) => {
+         Trace.WriteLine(id + status.ToString() + line);
+      }));
 
 
       //   plugn.iniWriterValue("Power", "LogLevel","2", @"C:\Users\elad.bahar\AppData\Local\Blizzard\Hearthstone\log.config",
@@ -102,6 +110,10 @@ namespace overwolf.plugins.unittest {
     }
     void plugn_OnFileListenerChanged(object id, object status, object data) {
       //Console.WriteLine(string.Format("file updated: id:{0} status:{1} data:{2}", id, status, data));
+    }
+
+    void plugn_onFolderListenerChanged(object id, object status, object data) {
+      Console.WriteLine(string.Format("file updated: id:{0} status:{1} data:{2}", id, status, data));
     }
   }
 }

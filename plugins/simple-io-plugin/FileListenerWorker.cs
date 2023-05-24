@@ -6,6 +6,9 @@ namespace overwolf.plugins.simpleio {
   internal class FileListenerWorker
   {
     string _fileName;
+    string _dirPath;
+    FileSystemWatcher _folderWatcher;
+
     public FileListenerWorker()
     {
       IsCanceled = false;
@@ -88,6 +91,41 @@ namespace overwolf.plugins.simpleio {
      
     }
 
+    public void ListenOnDirectory(string id,
+                                  string path,
+                                  string filter,
+                                  Action<object, object, object> callback,
+                                  Action<object, object, object> notifierDelegate
+    ) {
+      _dirPath = path;
+      try {
+        if (!DirctoryExists(path)) {
+          callback(id, false, $"Can't find directory ${path}");
+          return;
+        }
+
+        _folderWatcher = new FileSystemWatcher(path);
+
+        _folderWatcher.NotifyFilter =
+            NotifyFilters.FileName |
+            NotifyFilters.DirectoryName |
+            NotifyFilters.CreationTime;
+
+        if (!String.IsNullOrEmpty(filter)) {
+          _folderWatcher.Filter = filter;
+        }
+        
+        _folderWatcher.EnableRaisingEvents = true;
+        _folderWatcher.Created += (object sender, FileSystemEventArgs e) => {
+          notifierDelegate(id, true, e.Name);
+        };
+
+      } catch (Exception ex) {
+        callback(id, false, $"Exception: {ex}");
+      }
+    }
+
+
     private int GetLineCount(string filename) {
       try {
         return File.ReadLines(filename).Count();
@@ -125,5 +163,16 @@ namespace overwolf.plugins.simpleio {
         }
       }
     }
+
+    private bool DirctoryExists(string path) {
+      try {
+        DirectoryInfo dir = new DirectoryInfo(path);
+        return dir.Exists;
+      } catch (Exception) {
+
+        return false;
+      }
+    }
+
   }
 }

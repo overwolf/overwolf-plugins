@@ -60,7 +60,50 @@ namespace overwolf.plugins.simpleio {
       StopExistWorker(id);
     }
 
-    private static void StopExistWorker(string id) {
+    public static void ListenOnDirectory(string id,
+                                         string path,
+                                         string filter,
+                                         Action<object, object, object> callback,
+                                         Action<object, object, object> notifierDelegate
+    ) {
+      if (callback == null) {
+        return;
+      }
+
+      try {
+
+        var warpper = new FileListenTaskObject();
+        warpper.worker = new FileListenerWorker();
+        warpper.task = Task.Run(() => {
+          try {
+            warpper.worker.ListenOnDirectory(id, path, filter, callback, notifierDelegate);
+
+            lock (_listenTaskes) {
+              if (_listenTaskes.ContainsKey(id))
+                _listenTaskes.Remove(id);
+            }
+          } catch (Exception) {
+            try {
+              lock (_listenTaskes) {
+                _listenTaskes.Remove(id);
+              }
+            } catch (Exception) {
+
+            }
+
+          }
+
+        });
+
+        _listenTaskes[id] = warpper;
+
+      } catch (Exception ex) {
+
+        callback(id, false, "listenOnDirectory error:" + ex.ToString());
+      }
+    }
+
+      private static void StopExistWorker(string id) {
       lock (_listenTaskes) {
         if (_listenTaskes.ContainsKey(id)) {
           try {

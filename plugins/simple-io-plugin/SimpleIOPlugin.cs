@@ -21,6 +21,7 @@ namespace overwolf.plugins.simpleio {
     public event Action<object, object, object> onFileListenerChanged;
     public event Action<object, object, object, object> onFileListenerChanged2;
     public event Action<object, object, object> onOutputDebugString;
+    public event Action<object, object, object> onFolderListenerChanged;
     #endregion Events
 
     #region IDisposable
@@ -383,6 +384,10 @@ namespace overwolf.plugins.simpleio {
       FileListenerManager.stopFileListen(id);
     }
 
+    public void listenOnDirectory(string id, string path, string filter, Action<object, object, object> callback) {
+      FileListenerManager.ListenOnDirectory(id, path, filter, callback, OnDirectoryChanged);
+    }
+
     public void iniReadValue(string section, string key, string filePath, Action<object, object> callback) {
       Task.Run(() => {
         IniFile.IniReadValue(section, key, filePath, callback);
@@ -415,6 +420,12 @@ namespace overwolf.plugins.simpleio {
       // new event: |isNew| the line was written after start listen on file
       if (onFileListenerChanged2 != null) {
          onFileListenerChanged2(id, status, data, isNew);
+      }
+    }
+
+    private void OnDirectoryChanged(object id, object status, object data) {
+      if (onFolderListenerChanged != null) {
+        onFolderListenerChanged(id, status, data);
       }
     }
 

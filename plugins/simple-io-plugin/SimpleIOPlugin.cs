@@ -388,6 +388,10 @@ namespace overwolf.plugins.simpleio {
       FileListenerManager.ListenOnDirectory(id, path, filter, callback, OnDirectoryChanged);
     }
 
+    public void stopFolderListen(string id) {
+      FileListenerManager.StopFolderListen(id);
+    }
+
     public void iniReadValue(string section, string key, string filePath, Action<object, object> callback) {
       Task.Run(() => {
         IniFile.IniReadValue(section, key, filePath, callback);

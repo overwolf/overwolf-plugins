@@ -102,8 +102,11 @@ namespace overwolf.plugins.simpleio {
         callback(id, false, "listenOnDirectory error:" + ex.ToString());
       }
     }
+    public static void StopFolderListen(string id) {
+      StopExistWorker(id);
+    }
 
-      private static void StopExistWorker(string id) {
+    private static void StopExistWorker(string id) {
       lock (_listenTaskes) {
         if (_listenTaskes.ContainsKey(id)) {
           try {

@@ -32,7 +32,7 @@
 	"extra-objects": {
       "process-manager-plugin": {
         "file": "process_manager.dll",
-        "class": "com.overwolf.net.ProcessManager"
+        "class": "com.overwolf.com.overwolf.procmgr.ProcessManager"
       }
     }
   }

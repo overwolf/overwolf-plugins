@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -118,6 +119,7 @@ namespace overwolf.plugins.simpleio {
     #endregion
 
     #region Functions
+    // ------------------------------------------------------------------------
     public void fileExists(string path, Action<object> callback) {
 
       if (callback == null)
@@ -140,6 +142,7 @@ namespace overwolf.plugins.simpleio {
 
     }
 
+    // ------------------------------------------------------------------------
     public void isDirectory(string path, Action<object> callback) {
       if (callback == null)
         return;
@@ -164,6 +167,7 @@ namespace overwolf.plugins.simpleio {
       }
     }
 
+    // ------------------------------------------------------------------------
     public void writeLocalAppDataFile(string path, string content, Action<object, object> callback) {
       if (callback == null)
         return;
@@ -199,6 +203,7 @@ namespace overwolf.plugins.simpleio {
       }
     }
 
+    // ------------------------------------------------------------------------
     public void getLatestFileInDirectory(string path, Action<object, object> callback) {
       if (callback == null)
         return;
@@ -234,6 +239,7 @@ namespace overwolf.plugins.simpleio {
       }
     }
 
+    // ------------------------------------------------------------------------
     public void getTextFile(string filePath, bool widechars, Action<object, object> callback) {
       if (callback == null)
         return;
@@ -277,6 +283,7 @@ namespace overwolf.plugins.simpleio {
       }
     }
 
+    // ------------------------------------------------------------------------
     public void getBinaryFile(string filePath, int limit, Action<object, object> callback) {
       if (callback == null)
         return;
@@ -327,6 +334,7 @@ namespace overwolf.plugins.simpleio {
       }
     }
 
+    // ------------------------------------------------------------------------
     public void listDirectory(string path, Action<object, object> callback) {
       if (callback == null)
         return;
@@ -376,34 +384,41 @@ namespace overwolf.plugins.simpleio {
       }
     }
 
+    // ------------------------------------------------------------------------
     public void listenOnFile(string id, string filename, bool skipToEnd, Action<object, object, object> callback) {
       FileListenerManager.ListenOnFile(id, filename, skipToEnd, callback, OnFileChanged);
     }
 
+    // ------------------------------------------------------------------------
     public void stopFileListen(string id) {
       FileListenerManager.stopFileListen(id);
     }
 
-      
+    // ------------------------------------------------------------------------
     public void listenOnDirectory(string id, string path, string filter, FolderListenerTypes[] notifyFilters, Action<object, object, object> callback) {
       FileListenerManager.ListenOnDirectory(id, path, filter, notifyFilters, callback, OnDirectoryChanged);
     }
 
+    // ------------------------------------------------------------------------
     public void stopFolderListen(string id) {
       FileListenerManager.StopFolderListen(id);
     }
 
+    // ------------------------------------------------------------------------
     public void iniReadValue(string section, string key, string filePath, Action<object, object> callback) {
       Task.Run(() => {
         IniFile.IniReadValue(section, key, filePath, callback);
       });
     }
+
+    // ------------------------------------------------------------------------
     public void iniWriteValue(string section, string key, string value, string filePath, Action<object, object> callback ) {
       Task.Run(() => {
         IniFile.IniWriteValue(section, key, value, filePath, callback);
       });
     }
 
+    // ------------------------------------------------------------------------
     public void listenOnProcess(string processname, Action<object, object> callback) {
       OutputDebugStringManager.Callback = OnOutputDebugString;
       Task.Run(() => {
@@ -411,12 +426,14 @@ namespace overwolf.plugins.simpleio {
       });
     }
 
+    // ------------------------------------------------------------------------
     public void stopProcesseListen(string processname, Action<object, object> callback) {
       Task.Run(() => {
         OutputDebugStringManager.StopListenOnProcess(processname, callback);
       });
     }
 
+    // ------------------------------------------------------------------------
     private void OnFileChanged(object id, object status, object data, bool isNew) {
       if (onFileListenerChanged != null) {
         onFileListenerChanged(id, status, data);
@@ -428,18 +445,21 @@ namespace overwolf.plugins.simpleio {
       }
     }
 
+    // ------------------------------------------------------------------------
     private void OnDirectoryChanged(object id, object status, object data) {
       if (onFolderListenerChanged != null) {
         onFolderListenerChanged(id, status, data);
       }
     }
 
+    // ------------------------------------------------------------------------
     private void OnOutputDebugString(int processId,string processName, string text) {
       if (onOutputDebugString != null) {
         onOutputDebugString(processId, processName,  text);
       }
     }
 
+    // ------------------------------------------------------------------------
     public void simulateMouseClick(int x, int y, Action<object> callback) {
       if (_window == IntPtr.Zero) {
         if (callback != null) {
@@ -464,6 +484,7 @@ namespace overwolf.plugins.simpleio {
       });
     }
 
+    // ------------------------------------------------------------------------
     #region getCurrentCursorPosition
     [StructLayout(LayoutKind.Sequential)]
     public struct POINT {
@@ -480,22 +501,28 @@ namespace overwolf.plugins.simpleio {
       }
     }
 
+    // ------------------------------------------------------------------------
     [DllImport("user32.dll")]
     [return: MarshalAs(UnmanagedType.Bool)]
     static extern bool GetCursorPos(out POINT lpPoint);
 
+    // ------------------------------------------------------------------------
     [DllImport("user32.dll")]
     static extern IntPtr WindowFromPoint(POINT Point);
 
+    // ------------------------------------------------------------------------
     [DllImport("User32.dll", SetLastError = true, CharSet = CharSet.Auto)]
     static extern long GetWindowText(IntPtr hwnd, StringBuilder lpString, long cch);
 
+    // ------------------------------------------------------------------------
     [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
     static extern int GetWindowTextLength(IntPtr hWnd);
 
+    // ------------------------------------------------------------------------
     [DllImport("user32.dll")]
     static extern bool ScreenToClient(IntPtr hwnd, ref POINT pt);
 
+    // ------------------------------------------------------------------------
     public void getCurrentCursorPosition(Action<object, object, object, object> callback) {
       if (callback == null)
         return;
@@ -523,6 +550,50 @@ namespace overwolf.plugins.simpleio {
         callback(false, string.Format("exception: {0}", ex.ToString()), 0, 0);
       }
     }
+
+    // ------------------------------------------------------------------------
+    public void RegistryGetKeyValue(string registryStore ,string key, string value, Action<object, object> callback) {
+      Task.Run( async () => {
+        RegistryKey regKey;
+        try {
+          switch (registryStore) {
+            case "LocalMachine":
+              regKey = await RegistryManager.LocalMachineOpenKey(key);
+              break;
+            case "CurrentUser":
+              regKey = await RegistryManager.CurrentUserOpenKey(key);
+              break;
+            case "ClassesRoot":
+              regKey = await RegistryManager.ClassesRootOpenKey(key);
+              break;
+            default:
+              regKey = null;
+              break;
+          }
+
+
+          if (regKey == null) {
+            callback(false, "Unable to locate registry key");
+            return;
+          }
+
+          var result = regKey.GetValue(value);
+          if (result == null) {
+            callback(false, $"Unable to locate value: \"{value}\" in key \"{key}\"");
+            return;
+          }
+
+          callback(true, result);
+
+        } catch (Exception ex) {
+          callback(false, $"Error opening registry key, Details: {ex}");
+        }
+
+      });
+      
+
+    }
+
 
     #endregion getCurrentCursorPosition
 

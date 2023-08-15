@@ -68,6 +68,14 @@ namespace overwolf.plugins.unittest {
          Trace.WriteLine(id + status.ToString() + line);
       }));
 
+      _plugn.RegistryGetKeyValue(
+        "LocalMachine",
+        "SOFTWARE\\Wow6432Node\\Overwolf",
+        "CurrentVersion",
+        new Action<object, object>((status, result) => {
+          Trace.WriteLine(status.ToString() + result);
+        }));
+
 
       //   plugn.iniWriterValue("Power", "LogLevel","2", @"C:\Users\elad.bahar\AppData\Local\Blizzard\Hearthstone\log.config",
       //     new Action<object, object>((status, result) => {

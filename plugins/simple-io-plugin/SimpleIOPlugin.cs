@@ -390,6 +390,29 @@ namespace overwolf.plugins.simpleio {
     }
 
     // ------------------------------------------------------------------------
+    public void copyFile(string src, string dest, bool overrideFile, Action<object, object> callback) {
+      try {
+
+        var srcFile = new FileInfo(src);
+        if (!srcFile.Exists) {
+          callback(false, $"Source file not found: {src} ");
+        }
+
+        var destDir = new DirectoryInfo(dest);
+        if (!destDir.Exists) {
+          callback(false, $"Dest dir not found: {dest} ");
+        }
+
+        srcFile.CopyTo(Path.Combine(dest, srcFile.Name), overrideFile);
+        callback(true, $"Success");
+
+      } catch (Exception ex) {
+
+        callback(false, $"Exception: {ex}");
+      }
+    }
+
+    // ------------------------------------------------------------------------
     public void stopFileListen(string id) {
       FileListenerManager.stopFileListen(id);
     }

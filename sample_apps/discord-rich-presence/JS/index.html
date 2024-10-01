@@ -1,0 +1,29 @@
+<html>
+  <head>
+    <title>Plugin Tester</title>
+  </head>
+
+  <body>
+    <hr />
+    <h4>Init / Stop plugin</h4>
+    <button onclick="initializeFromButton()">Init DRP</button>
+    <button onclick="dispose()">Stop DRP</button>
+    <hr />
+    <h4>Presence Manager</h4>
+    <button onclick="firstPresence()">First Presence</button>
+    <button onclick="updatePresence()">Update Presence</button>
+    <button onclick="updatePresenceForGame()">
+      Update based on Game Launch
+    </button>
+    <button onclick="updatePresenceWithButtons()">
+      Update Presence with buttons
+    </button>
+
+    <hr />
+    <textarea id="log" style="width: 100%; height: 200px"></textarea>
+  </body>
+
+  <script src="./scripts/overwolfplugin.js"></script>
+  <script src="./scripts/main.js"></script>
+  <script src="./scripts/presence-manager.js"></script>
+</html>

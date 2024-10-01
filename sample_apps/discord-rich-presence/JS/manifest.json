@@ -1,0 +1,44 @@
+{
+  "manifest_version": "1",
+  "type": "WebApp",
+  "meta": {
+    "name": "DRP-SampleApp",
+    "version": "1.0.0",
+    "minimum-overwolf-version": "0.85.0.0",
+    "author": "Overwolf",
+    "icon": "icon.png",
+    "icon_gray": "icon_gray.png",
+    "description": "Net Process Manager Plugin tester App"
+  },
+  "permissions": ["Extensions"],
+  "data": {
+    "start_window": "index",
+    "windows": {
+      "index": {
+        "file": "index.html",
+        "transparent": false,
+        "resizable": true,
+        "show_in_taskbar": true,
+        "size": {
+          "width": 400,
+          "height": 500
+        },
+        "start_position": {
+          "Top": 100,
+          "Left": 300
+        }
+      }
+    },
+    "extra-objects": {
+      "DiscordRPCPlugin": {
+        "file": "plugins/DiscordRPCPlugin.dll",
+        "class": "overwolf.plugins.DiscordRPCPlugin"
+      }
+    },
+    "developer": {
+      "enable_auto_refresh": true,
+      "reload_delay": 1000,
+      "filter": "*.json;*.html;*.js"
+    }
+  }
+}

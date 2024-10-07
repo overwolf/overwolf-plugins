@@ -1,18 +1,24 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace com.overwolf.dwnldr {
   public class Downloader {
     private const string kErrorAlreadyDownloading = "already_downloading";
+    private const string kErrorNoActiveDownload = "no_active_download";
     private const string kErrorFailedUnknownReason = "failed_unknown_reason";
+    private const string kDownloadCanceled = "download_canceled";
 
     public event Action<object> onDownloadError = null;
     public event Action<object> onDownloadProgress = null;
-    public event Action<object> onDownloadComplete = null;  
+    public event Action<object> onDownloadComplete = null;
+    public event Action<object> onFileExecuted = null;
 
     // Allow only 1 download per instance    
     private bool _downloading = false;
@@ -34,7 +40,7 @@ namespace com.overwolf.dwnldr {
     /// <param name="localFile">Destination file on local disk</param>
     /// download completion
     /// </param>
-    public void downloadFile(string url, string localFile) {
+    public void downloadFile(string url, string localFile, string userAgant = null) {
       if (_downloading) {
         FireDownloadErrorEvent(url, kErrorAlreadyDownloading);
         return;
@@ -49,12 +55,99 @@ namespace com.overwolf.dwnldr {
         _previousProgress = -1;
 
         _webClient = new WebClientGzip();
+        if (userAgant != null) { 
+          _webClient.Headers[HttpRequestHeader.UserAgent] = userAgant;
+        }
         _webClient.DownloadFileCompleted += OnDownloadFileCompleted;
         _webClient.DownloadProgressChanged += OnDownloadProgressChanged;
         _webClient.DownloadFileAsync(new Uri(url), localFile);
         _downloading = true;
       } catch (Exception e) {
+        _downloading = false;
         FireDownloadErrorEvent(url, e.Message.ToString());
+      }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// cancells active download
+    /// </param>
+    public void cancelDownload() {
+      if (!_downloading) {
+        FireDownloadErrorEvent("", kErrorNoActiveDownload);
+      }
+
+      _webClient.CancelAsync();
+      _downloading = false;
+    }
+
+
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <param name="path">Path of file to run</param>
+      /// download completion
+      /// </param>
+      public async void ExecuteFileProcess(string path, string[] verifiedThumbprints = null) {
+      try {
+        bool validated = await ValidateFileSigniture(path, verifiedThumbprints);
+        if (!validated) {
+
+          onFileExecuted(new {
+            result = false,
+            reason = "File validation failed"
+          });
+          return;
+        }
+
+        ProcessStartInfo psi = new ProcessStartInfo() {
+          FileName = path,
+          Arguments = "",
+        };
+
+        Process.Start(psi);
+
+        onFileExecuted(new {
+          result = true,
+        });
+
+      } catch (Exception ex) {
+        onFileExecuted(new {
+          result = false,
+          reason = ex.Message
+        });
+
+      }
+    }
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="path">Path of file to run</param>
+    /// download completion
+    /// </param>
+    public async Task<bool> ValidateFileSigniture(string path, string[] verifiedThumbprints = null ) {
+      try {
+        bool signed = await SignitureHelper.IsSigned(path);
+        if (!signed) {
+          return false;
+        }
+
+        if (verifiedThumbprints == null) {
+          return true;
+        }
+
+        var signitureHashString = await SignitureHelper.GetCertHashString(path);
+
+        if (!verifiedThumbprints.Contains(signitureHashString)) {
+          return false;
+        }
+
+        return true;
+      } catch (Exception) {
+        return false;
       }
     }
 
@@ -87,6 +180,16 @@ namespace com.overwolf.dwnldr {
       _downloading = false;
 
       if (onDownloadComplete == null) {
+        return;
+      }
+
+      if (e.Cancelled) {
+        try {
+          FireDownloadErrorEvent(_url, kDownloadCanceled);
+        }
+        catch (Exception) {
+          FireDownloadErrorEvent(_url, kErrorFailedUnknownReason);
+        }
         return;
       }
 

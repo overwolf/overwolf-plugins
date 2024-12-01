@@ -42,3 +42,9 @@ Answer: Use the process_manager.dll plugin in your app and call plugin().isProce
 downloader
 ================
 Allows downloading a remote files.
+
+Discord Rich Presence
+================
+Powered by a community-made Overwolf Plugin: https://github.com/Trucky/overwolf-discord-rpc-plugin \
+The Discord Rich Presence Plugin allows setting your user's Rich Presence in Discord. \
+More information about Discord's Rich Presence can be read here: https://discord.com/developers/docs/rich-presence/overview

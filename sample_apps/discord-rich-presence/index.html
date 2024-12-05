@@ -1,0 +1,22 @@
+<html>
+  <head>
+    <title>Plugin Tester</title>
+  </head>
+
+  <body>
+    <hr />
+    <h4>Init / Stop plugin</h4>
+    <button onclick="initialize()">Init app</button>
+    <button onclick="dispose()">Uninit app</button>
+    <hr />
+    <h4>Presence Manager</h4>
+    <button onclick="setPresence()">Set Presence</button>
+    <button onclick="clearPresence()">Clear Presence</button>
+    <hr />
+    <label>Open dev tools for more logs</label>
+    <textarea id="log" style="width: 100%; height: 200px"></textarea>
+  </body>
+
+  <script src="./scripts/overwolfplugin.js"></script>
+  <script src="./scripts/main.js"></script>
+</html>

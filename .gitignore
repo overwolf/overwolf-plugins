@@ -33,3 +33,5 @@ Release/
 
 *.suo
 /.vs/
+/packages/
+.vs/

@@ -20,7 +20,7 @@ namespace com.overwolf.dwnldr {
     public event Action<object> onDownloadComplete = null;
     public event Action<object> onFileExecuted = null;
 
-    // Allow only 1 download per instance    
+    // Allow only 1 download per instance
     private bool _downloading = false;
 
     // Store this so we give context upon callbacks
@@ -28,13 +28,13 @@ namespace com.overwolf.dwnldr {
     private string _localFile;
     private int _previousProgress;
     private WebClientGzip _webClient;
-    
+
     /// Public Methods
     public Downloader() {
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="url">URL to download from</param>
     /// <param name="localFile">Destination file on local disk</param>
@@ -55,7 +55,7 @@ namespace com.overwolf.dwnldr {
         _previousProgress = -1;
 
         _webClient = new WebClientGzip();
-        if (userAgant != null) { 
+        if (userAgant != null) {
           _webClient.Headers[HttpRequestHeader.UserAgent] = userAgant;
         }
         _webClient.DownloadFileCompleted += OnDownloadFileCompleted;
@@ -69,7 +69,7 @@ namespace com.overwolf.dwnldr {
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// cancells active download
     /// </param>
@@ -84,7 +84,7 @@ namespace com.overwolf.dwnldr {
 
 
       /// <summary>
-      /// 
+      ///
       /// </summary>
       /// <param name="path">Path of file to run</param>
       /// download completion
@@ -123,7 +123,7 @@ namespace com.overwolf.dwnldr {
 
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="path">Path of file to run</param>
     /// download completion
@@ -152,7 +152,7 @@ namespace com.overwolf.dwnldr {
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="reason"></param>
     private void FireDownloadErrorEvent(string url, string reason) {
@@ -170,11 +170,11 @@ namespace com.overwolf.dwnldr {
 
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void OnDownloadFileCompleted(object sender, 
+    private void OnDownloadFileCompleted(object sender,
                                          AsyncCompletedEventArgs e) {
 
       _downloading = false;
@@ -210,12 +210,12 @@ namespace com.overwolf.dwnldr {
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
     private void OnDownloadProgressChanged(
-      object sender, 
+      object sender,
       DownloadProgressChangedEventArgs e) {
 
       if (onDownloadProgress == null) {
@@ -243,7 +243,7 @@ namespace com.overwolf.dwnldr {
     /// <param name="localFile"></param>
     private void PrepareLocalFileForDownload(string localFile) {
       try {
-        // Make sure the file doesn't already exist - otherwise we'll fail 
+        // Make sure the file doesn't already exist - otherwise we'll fail
         // downloading
         File.Delete(localFile);
       } catch (Exception) {

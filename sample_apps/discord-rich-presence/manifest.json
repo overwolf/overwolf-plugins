@@ -2,7 +2,7 @@
   "manifest_version": "1",
   "type": "WebApp",
   "meta": {
-    "name": "DRP-SampleApp",
+    "name": "DiscordRichPresence-SampleApp",
     "version": "1.0.0",
     "minimum-overwolf-version": "0.85.0.0",
     "author": "Overwolf",
@@ -30,9 +30,9 @@
       }
     },
     "extra-objects": {
-      "DiscordRPCPlugin": {
-        "file": "plugins/DiscordRPCPlugin.dll",
-        "class": "overwolf.plugins.DiscordRPCPlugin"
+      "discordPlugin": {
+        "file": "plugins/discord-rich-presence.dll",
+        "class": "com.overwolf.discord.DiscordRichPresence"
       }
     },
     "developer": {

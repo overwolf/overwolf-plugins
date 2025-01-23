@@ -63,7 +63,7 @@ function initializeFromButton() {
 }
 
 function setPresence() {
-  const withRunningTimestamp = false;
+  const withRunningTimestamp = true;
   const withImages = true;
   const withButtons = true;
 

@@ -4,7 +4,7 @@ using DiscordRPC.Message;
 using Newtonsoft.Json;
 
 namespace com.overwolf.discord {
-  public class DiscordRichPresence {
+  public class DiscordRichPresence : IDisposable {
     /// <summary>
     /// The following global events are directly connected to DiscordRpcClient's
     /// events - if you wish to add more events you may (e.g.
@@ -75,7 +75,7 @@ namespace com.overwolf.discord {
     /// <summary>
     ///
     /// </summary>
-    public void dispose() {
+    public void Dispose() {
       DisposeDiscordRpcClientIfExists();
     }
 
@@ -84,7 +84,6 @@ namespace com.overwolf.discord {
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="args"></param>
-    /// <exception cref="NotImplementedException"></exception>
     private void discordRpcClient_OnReady(object sender, ReadyMessage args) {
       onReady?.Invoke(args);
     }

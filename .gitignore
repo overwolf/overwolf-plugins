@@ -35,3 +35,5 @@ Release/
 /.vs/
 /packages/
 .vs/
+*.zip
+*.7z

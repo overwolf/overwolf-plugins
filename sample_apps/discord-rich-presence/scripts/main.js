@@ -49,7 +49,7 @@ async function initialize() {
 
 function dispose() {
   // Dispose connection to Discord
-  _discordRichPresence.Dispose();
+  _discordRichPresence.dispose();
   log('[discord] Disposing plugin!');
 }
 

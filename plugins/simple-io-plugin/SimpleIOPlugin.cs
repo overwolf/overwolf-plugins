@@ -613,8 +613,49 @@ namespace overwolf.plugins.simpleio {
         }
 
       });
-      
 
+      }
+
+    // ------------------------------------------------------------------------
+    public void RegistryGetKeys(string registryStore, string key, Action<object, object> callback) {
+      Task.Run(async () => {
+        RegistryKey regKey;
+        try {
+          switch (registryStore) {
+            case "LocalMachine":
+              regKey = await RegistryManager.LocalMachineOpenKey(key);
+              break;
+            case "CurrentUser":
+              regKey = await RegistryManager.CurrentUserOpenKey(key);
+              break;
+            case "ClassesRoot":
+              regKey = await RegistryManager.ClassesRootOpenKey(key);
+              break;
+            default:
+              regKey = null;
+              break;
+          }
+
+
+          if (regKey == null) {
+            callback(false, "Unable to locate registry key");
+            return;
+          }
+
+          var result = regKey.GetSubKeyNames();
+          if (result == null) {
+            callback(false, $"Unable to locate sub keys for: {key}");
+            return;
+          }
+
+          callback(true, result);
+
+        }
+        catch (Exception ex) {
+          callback(false, $"Error opening registry key, Details: {ex}");
+        }
+
+      });
     }
 
 

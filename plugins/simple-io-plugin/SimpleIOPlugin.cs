@@ -240,6 +240,42 @@ namespace overwolf.plugins.simpleio {
     }
 
     // ------------------------------------------------------------------------
+    public void getFileLastModified(string path, Action<object, object> callback) {
+      if (callback == null)
+        return;
+
+      try {
+        Task.Run(() => {
+          try {
+
+            var dir = new DirectoryInfo(path);
+            if (dir.Exists && dir.LastWriteTime > DateTime.MinValue) {
+              callback(true, dir.LastWriteTime.ToString());
+            }
+
+            var file = new FileInfo(path);
+            if (!file.Exists) {
+              callback(false, string.Format("File not found: "));
+            }
+
+            if (file.LastWriteTime == null || file.LastWriteTime == DateTime.MinValue) {
+              callback(false, string.Format("Last Modified Ts not located: "));
+            }
+
+            callback(true, file.LastWriteTime.ToString());
+
+
+          } catch (Exception ex) {
+            callback(false, string.Format("unknown error: ", ex.ToString()));
+          }
+        });
+
+      }
+      catch (Exception ex) {
+        callback(false, string.Format("unknown error: ", ex.ToString()));
+      }
+    }
+    // ------------------------------------------------------------------------
     public void getTextFile(string filePath, bool widechars, Action<object, object> callback) {
       if (callback == null)
         return;

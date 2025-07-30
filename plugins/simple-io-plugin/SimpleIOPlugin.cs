@@ -275,6 +275,7 @@ namespace overwolf.plugins.simpleio {
         callback(false, string.Format("unknown error: ", ex.ToString()));
       }
     }
+
     // ------------------------------------------------------------------------
     public void getTextFile(string filePath, bool widechars, Action<object, object> callback) {
       if (callback == null)
@@ -651,6 +652,56 @@ namespace overwolf.plugins.simpleio {
       });
 
       }
+
+    // ------------------------------------------------------------------------
+    public void RegistryGetKeyValueBinary(string registryStore, string key, string value, Action<object, object> callback) {
+      Task.Run(async () => {
+        RegistryKey regKey;
+        try {
+          switch (registryStore) {
+            case "LocalMachine":
+              regKey = await RegistryManager.LocalMachineOpenKey(key);
+              break;
+            case "CurrentUser":
+              regKey = await RegistryManager.CurrentUserOpenKey(key);
+              break;
+            case "ClassesRoot":
+              regKey = await RegistryManager.ClassesRootOpenKey(key);
+              break;
+            default:
+              regKey = null;
+              break;
+          }
+
+
+          if (regKey == null) {
+            callback(false, "Unable to locate registry key");
+            return;
+          }
+
+          var result = regKey.GetValue(value);
+          if (result == null) {
+            callback(false, $"Unable to locate value: \"{value}\" in key \"{key}\"");
+            return;
+          }
+
+          if (result is byte[] binaryData) {
+            string base64String = Convert.ToBase64String(binaryData);
+            callback(true, base64String);
+            // Send base64String to your server
+          } else {
+            callback(false, $"Value is not binary");
+          }
+
+
+        }
+        catch (Exception ex) {
+          callback(false, $"Error opening registry key, Details: {ex}");
+        }
+
+      });
+
+    }
 
     // ------------------------------------------------------------------------
     public void RegistryGetKeys(string registryStore, string key, Action<object, object> callback) {

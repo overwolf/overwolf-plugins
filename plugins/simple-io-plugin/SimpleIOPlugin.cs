@@ -746,6 +746,19 @@ namespace overwolf.plugins.simpleio {
     }
 
 
+    // ------------------------------------------------------------------------
+    public void BsodSinceLastBoot(int hoursSince, Action<object, object> callback) {
+      try {
+        var bsodDetected = bsodDetector.BsodSinceLastBoot(hoursSince);
+        callback(bsodDetected, "");
+
+      } catch (Exception ex) {
+          callback(false, $"Error opening registry key, Details: {ex}");
+      }
+
+    }
+
+
     #endregion getCurrentCursorPosition
 
     #region getMonitorDPI

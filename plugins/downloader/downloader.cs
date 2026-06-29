@@ -89,11 +89,12 @@ namespace com.overwolf.dwnldr {
       /// <param name="path">Path of file to run</param>
       /// download completion
       /// </param>
-      public async void ExecuteFileProcess(string path, string[] verifiedThumbprints = null) {
+      public async void ExecuteFileProcess(string path, string[] verifiedThumbprints = null, bool verifySignature = true) {
       try {
-        bool validated = await ValidateFileSigniture(path, verifiedThumbprints);
-        if (!validated) {
 
+        bool validated = await ValidateFileSigniture(path, verifiedThumbprints);
+          
+        if (verifySignature && !validated) {
           onFileExecuted(new {
             result = false,
             reason = "File validation failed"

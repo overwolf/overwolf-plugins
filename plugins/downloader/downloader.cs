@@ -83,19 +83,32 @@ namespace com.overwolf.dwnldr {
     }
 
 
-      /// <summary>
-      ///
-      /// </summary>
-      /// <param name="path">Path of file to run</param>
-      /// download completion
-      /// </param>
-      public async void ExecuteFileProcess(string path, string[] verifiedThumbprints = null, bool verifySignature = true) {
-      try {
+    /// <summary>
+    /// Runs |path| with no command line arguments.
+    /// </summary>
+    /// <param name="path">Path of file to run</param>
+    public void ExecuteFileProcess(string path,
+                                   string[] verifiedThumbprints = null,
+                                   bool verifySignature = true) {
+      ExecuteFileProcessWithArgs(path, "", verifiedThumbprints, verifySignature);
+    }
 
+    /// <summary>
+    /// Runs |path| with |args| as its command line (e.g. "--silent").
+    /// Fires |onFileExecuted| with the result.
+    /// </summary>
+    /// <param name="path">Path of file to run</param>
+    /// <param name="args">Command line arguments passed to the process</param>
+    public async void ExecuteFileProcessWithArgs(
+      string path,
+      string args,
+      string[] verifiedThumbprints = null,
+      bool verifySignature = true) {
+      try {
         bool validated = await ValidateFileSigniture(path, verifiedThumbprints);
-          
+
         if (verifySignature && !validated) {
-          onFileExecuted(new {
+          onFileExecuted?.Invoke(new {
             result = false,
             reason = "File validation failed"
           });
@@ -104,21 +117,20 @@ namespace com.overwolf.dwnldr {
 
         ProcessStartInfo psi = new ProcessStartInfo() {
           FileName = path,
-          Arguments = "",
+          Arguments = args ?? "",
         };
 
         Process.Start(psi);
 
-        onFileExecuted(new {
+        onFileExecuted?.Invoke(new {
           result = true,
         });
 
       } catch (Exception ex) {
-        onFileExecuted(new {
+        onFileExecuted?.Invoke(new {
           result = false,
           reason = ex.Message
         });
-
       }
     }
 

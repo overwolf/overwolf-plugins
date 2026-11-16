@@ -15,10 +15,17 @@ namespace com.overwolf.dwnldr {
     private const string kErrorFailedUnknownReason = "failed_unknown_reason";
     private const string kDownloadCanceled = "download_canceled";
 
+    // How long a launched file is watched for an exit before
+    // |onFileProcessExit| reports it as still running. Keep in sync with
+    // kFileProcessExitWatchMs in notifications-monorepo.
+    private const int kFileProcessExitWatchMs = 20 * 1000;
+
     public event Action<object> onDownloadError = null;
     public event Action<object> onDownloadProgress = null;
     public event Action<object> onDownloadComplete = null;
     public event Action<object> onFileExecuted = null;
+    // Fires once per launched file: { running, exitCode, durationMs }.
+    public event Action<object> onFileProcessExit = null;
 
     // Allow only 1 download per instance
     private bool _downloading = false;
@@ -95,7 +102,8 @@ namespace com.overwolf.dwnldr {
 
     /// <summary>
     /// Runs |path| with |args| as its command line (e.g. "--silent").
-    /// Fires |onFileExecuted| with the result.
+    /// Fires |onFileExecuted| with the result, then |onFileProcessExit| once
+    /// the process exits (or is still running after kFileProcessExitWatchMs).
     /// </summary>
     /// <param name="path">Path of file to run</param>
     /// <param name="args">Command line arguments passed to the process</param>
@@ -120,18 +128,44 @@ namespace com.overwolf.dwnldr {
           Arguments = args ?? "",
         };
 
-        Process.Start(psi);
+        Process process = Process.Start(psi);
+        Stopwatch stopwatch = Stopwatch.StartNew();
 
         onFileExecuted?.Invoke(new {
           result = true,
         });
 
+        WatchFileProcessExit(process, stopwatch);
       } catch (Exception ex) {
         onFileExecuted?.Invoke(new {
           result = false,
           reason = ex.Message
         });
       }
+    }
+
+    /// <summary>
+    /// Fires |onFileProcessExit| once - when |process| exits, or if it is
+    /// still running kFileProcessExitWatchMs after launch.
+    /// </summary>
+    private void WatchFileProcessExit(Process process, Stopwatch stopwatch) {
+      if (process == null) {
+        return;
+      }
+
+      Task.Run(() => {
+        try {
+          bool exited = process.WaitForExit(kFileProcessExitWatchMs);
+          onFileProcessExit?.Invoke(new {
+            running = !exited,
+            exitCode = exited ? process.ExitCode : (int?)null,
+            durationMs = stopwatch.ElapsedMilliseconds
+          });
+        } catch (Exception) {
+        } finally {
+          process.Dispose();
+        }
+      });
     }
 
 

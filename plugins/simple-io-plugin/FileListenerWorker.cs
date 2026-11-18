@@ -100,7 +100,7 @@ namespace overwolf.plugins.simpleio {
       _dirPath = path;
       try {
         if (!DirctoryExists(path)) {
-          callback(id, false, $"Can't find directory ${path}");
+          callback(id, false, $"Can't find directory {path}");
           return;
         }
 
